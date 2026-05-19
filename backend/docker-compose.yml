@@ -1,0 +1,41 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: walter-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: walter1234
+      MYSQL_DATABASE: walter
+      MYSQL_USER: walter
+      MYSQL_PASSWORD: walter1234
+    ports:
+      - "3308:3306"
+    volumes:
+      - walter-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build: .
+    container_name: walter-server
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: walter
+      DB_PASSWORD: walter1234
+      DB_NAME: walter
+      JWT_SECRET: "asiduasiodsajkdhjkah1238018uisahdjkbnm_2130978129sad_akjdhjkahsdfjkh1238123"
+      PORT: 3000
+      CLIENT_URL: http://localhost:5173
+    ports:
+      - "3000:3000"
+
+volumes:
+  walter-mysql-data:

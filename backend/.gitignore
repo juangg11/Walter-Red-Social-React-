@@ -1,0 +1,10 @@
+.env
+
+# Citrix ICA launch files
+*.ica
+*.ICA
+*citrix*
+*Citrix*
+*CITRIX*
+*wfica*
+*WFICA*
