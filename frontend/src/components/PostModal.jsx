@@ -4,6 +4,11 @@ import request from '../api/client';
 import { computeVote } from '../utils/computeVote';
 import styles from './PostModal.module.css';
 
+function formatCommunityName(name) {
+  if (!name) return '';
+  return String(name).replace(/^w\//i, '');
+}
+
 export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated, onAuthorClick = null, onShare = null }) {
   const [postData, setPostData] = useState(post);
   const [comments, setComments] = useState([]);
@@ -11,6 +16,11 @@ export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [userVote, setUserVote] = useState(post.voto_usuario ?? null);
+
+  useEffect(() => {
+    setPostData(post);
+    setUserVote(post?.voto_usuario ?? null);
+  }, [post]);
 
   useEffect(() => {
     if (!post?.id) return;
@@ -31,13 +41,15 @@ export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated
   }, [post?.id]);
 
   async function handleVote(voteType) {
+    const prevPost = postData;
+    const prevVote = userVote;
     const { nextVote, votes } = computeVote({
       currentVote: userVote,
       voteType,
       votes: postData.votos,
     });
 
-    const updated = { ...postData, votos: votes };
+    const updated = { ...postData, votos: votes, voto_usuario: nextVote };
     setPostData(updated);
     setUserVote(nextVote);
     onPostUpdated?.(updated);
@@ -45,11 +57,18 @@ export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated
     try {
       const result = await request(`/publicaciones/${post.id}/votar`, { method: 'POST', body: JSON.stringify({ tipo_voto: voteType }) });
       setPostData(result.post || updated);
-      setUserVote(result.voto || nextVote);
+      setUserVote(result.voto ?? nextVote);
     } catch {
-      setPostData(postData);
-      setUserVote(userVote);
+      setPostData(prevPost);
+      setUserVote(prevVote);
     }
+  }
+
+  async function handleShareClick() {
+    const updated = await onShare?.(postData);
+    if (!updated) return;
+    setPostData(updated);
+    onPostUpdated?.(updated);
   }
 
   async function addComment(parentId = null, content = newComment) {
@@ -81,8 +100,8 @@ export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated
         {/* Post */}
         <div className={styles.modalPost}>
           <div className={styles.modalPostMeta}>
-            Publicado por <button className={styles.inlineUserLink} onClick={() => onAuthorClick?.(postData?.username)}>w/{postData?.username ?? 'anon'}</button>
-            {postData?.comunidad_nombre ? ` en w/${postData.comunidad_nombre}` : ''}
+            Publicado por <button type="button" className={styles.inlineUserLink} onClick={() => onAuthorClick?.(postData?.username)}>{postData?.username ?? 'anon'}</button>
+            {postData?.comunidad_nombre ? ` en w/${formatCommunityName(postData.comunidad_nombre)}` : ''}
           </div>
           <h1 className={styles.modalPostTitle}>{postData?.titulo}</h1>
 
@@ -112,7 +131,7 @@ export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated
           >
             <ArrowBigDown size={20} />
           </button>
-          <button className={styles.modalVoteBtn} onClick={() => onShare?.(postData)}>
+          <button className={`${styles.modalVoteBtn} ${postData?.compartido_por_usuario ? styles.modalVoteBtnActive : ''}`} onClick={handleShareClick}>
             <Repeat2 size={18} />
             <span>{postData?.compartido_por_usuario ? 'Compartido' : 'Compartir'}</span>
           </button>

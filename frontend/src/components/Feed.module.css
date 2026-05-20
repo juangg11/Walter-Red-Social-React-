@@ -136,11 +136,34 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  border: none;
+  background: none;
   padding: 0;
   color: var(--secondary);
+  cursor: pointer;
+  font: inherit;
 }
 
 .postShareBtn:hover {
+  color: var(--primary-hover);
+}
+
+.postShareBtnActive {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.inlineUserLink {
+  border: 0;
+  background: none;
+  color: var(--text-primary);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+.inlineUserLink:hover {
   color: var(--primary-hover);
 }
 

@@ -93,6 +93,10 @@
   font-size: 12px;
 }
 
+:global(body[data-theme='dark']) .emptyText {
+  color: var(--text-secondary);
+}
+
 .moreBtn {
   background: none;
   border: 1px solid var(--border-light);

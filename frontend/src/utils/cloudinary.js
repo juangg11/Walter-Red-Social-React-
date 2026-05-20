@@ -1,7 +1,10 @@
 import request from '../api/client';
 
 export async function uploadToCloudinary(file, folder) {
-  const sig = await request('/media/signature', { folder });
+  const sig = await request('/media/signature', {
+    method: 'POST',
+    body: JSON.stringify({ folder }),
+  });
   const formData = new FormData();
   formData.append('file', file);
   formData.append('api_key', sig.apiKey);
@@ -20,14 +23,17 @@ export async function uploadToCloudinary(file, folder) {
   }
 
   const saved = await request('/media/commit', {
-    public_id: uploadData.public_id,
-    secure_url: uploadData.secure_url,
-    resource_type: uploadData.resource_type,
-    format: uploadData.format,
-    bytes: uploadData.bytes,
-    width: uploadData.width,
-    height: uploadData.height,
-    duration: uploadData.duration,
+    method: 'POST',
+    body: JSON.stringify({
+      public_id: uploadData.public_id,
+      secure_url: uploadData.secure_url,
+      resource_type: uploadData.resource_type,
+      format: uploadData.format,
+      bytes: uploadData.bytes,
+      width: uploadData.width,
+      height: uploadData.height,
+      duration: uploadData.duration,
+    }),
   });
 
   return { cloudinary: uploadData, asset: saved };

@@ -75,6 +75,8 @@ body[data-theme='dark'] {
   --bg-tertiary: #2b1f2b;
   --text-primary: #f8eef2;
   --text-secondary: #d8c3ce;
+  --secondary: #d8c3ce;
+  --secondary-hover: #f3dfe7;
   --border-color: rgba(237, 158, 174, 0.35);
   --border-light: rgba(237, 158, 174, 0.18);
   --navbar-bg: #3c1d2b;

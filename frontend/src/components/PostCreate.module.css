@@ -94,6 +94,72 @@
   margin-top: 6px;
 }
 
+.mediaField {
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--bg-secondary);
+}
+
+.fileInputHidden {
+  display: none;
+}
+
+.mediaPickerBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  background: transparent;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.mediaPickerBtn:hover {
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border-color: var(--primary-hover);
+  color: var(--primary-hover);
+}
+
+.selectedMediaPill {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 999px;
+  padding: 8px 12px;
+}
+
+.selectedMediaName {
+  color: var(--text-primary);
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.removeMediaBtn {
+  border: none;
+  background: none;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+.removeMediaBtn:hover {
+  color: var(--primary-hover);
+}
+
 .errorBox {
   margin-bottom: 15px;
   padding: 10px;

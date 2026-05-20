@@ -7,11 +7,20 @@ import request from '../api/client';
 import { computeVote } from '../utils/computeVote';
 import styles from './Feed.module.css';
 
+function formatCommunityName(name) {
+  if (!name) return '';
+  return String(name).replace(/^w\//i, '');
+}
+
 export function PostCard({ post, userVote, onVote, onClick, onShare, onAuthorClick = null }) {
+  const communityName = formatCommunityName(post.comunidad_nombre);
+  const isShared = Boolean(post.compartido_por_usuario);
+
   return (
     <div className={styles.postCard} onClick={onClick}>
       <div className={styles.votes}>
         <button
+          type="button"
           className={styles.voteBtn}
           title="Votar positivo"
           onClick={e => { e.stopPropagation(); onVote(post.id, 'up'); }}
@@ -21,6 +30,7 @@ export function PostCard({ post, userVote, onVote, onClick, onShare, onAuthorCli
         </button>
         <span className={styles.voteCount}>{post.votos ?? 0}</span>
         <button
+          type="button"
           className={styles.voteBtn}
           title="Votar negativo"
           onClick={e => { e.stopPropagation(); onVote(post.id, 'down'); }}
@@ -32,8 +42,8 @@ export function PostCard({ post, userVote, onVote, onClick, onShare, onAuthorCli
 
       <div className={styles.postContent}>
         <p className={styles.postMeta}>
-          Publicado por <button className="inline-user-link" onClick={e => { e.stopPropagation(); onAuthorClick?.(post.username); }}>w/{post.username ?? 'anon'}</button>
-          {post.comunidad_nombre ? ` en w/${post.comunidad_nombre}` : ''}
+          Publicado por <button type="button" className={styles.inlineUserLink} onClick={e => { e.stopPropagation(); onAuthorClick?.(post.username); }}>{post.username ?? 'anon'}</button>
+          {communityName ? ` en w/${communityName}` : ''}
         </p>
         <h3>{post.titulo ?? 'Sin título'}</h3>
 
@@ -49,14 +59,15 @@ export function PostCard({ post, userVote, onVote, onClick, onShare, onAuthorCli
           <MessageSquare size={18} />
           <span>{post.numero_comentarios ?? 0} Comentarios</span>
           <button
-            className={styles.postShareBtn}
+            type="button"
+            className={`${styles.postShareBtn} ${isShared ? styles.postShareBtnActive : ''}`}
             onClick={e => {
               e.stopPropagation();
               onShare?.(post);
             }}
           >
             <Repeat2 size={16} />
-            <span>{post.compartido_por_usuario ? 'Compartido' : 'Compartir'}</span>
+            <span>{isShared ? 'Compartido' : 'Compartir'}</span>
           </button>
         </div>
       </div>
@@ -111,9 +122,11 @@ export default function Feed({ user, searchQuery, selectedCommunities, communiti
   async function handleVote(postId, voteType) {
     const post = posts.find(p => p.id === postId);
     if (!post) return;
+    const previousVotes = post.votos;
+    const previousVote = userVotes[postId] ?? null;
 
     const { nextVote, votes } = computeVote({
-      currentVote: userVotes[postId],
+      currentVote: previousVote,
       voteType,
       votes: post.votos,
     });
@@ -127,8 +140,8 @@ export default function Feed({ user, searchQuery, selectedCommunities, communiti
       setPosts(cur => cur.map(p => p.id === postId ? serverPost : p));
       setUserVotes(cur => ({ ...cur, [postId]: result.voto }));
     } catch {
-      setPosts(cur => cur.map(p => p.id === postId ? { ...p, votos: post.votos } : p));
-      setUserVotes(cur => ({ ...cur, [postId]: userVotes[postId] }));
+      setPosts(cur => cur.map(p => p.id === postId ? { ...p, votos: previousVotes } : p));
+      setUserVotes(cur => ({ ...cur, [postId]: previousVote }));
     }
   }
 
@@ -150,8 +163,10 @@ export default function Feed({ user, searchQuery, selectedCommunities, communiti
 
       setPosts(cur => cur.map(item => item.id === post.id ? updated : item));
       setSelectedPost(cur => cur?.id === post.id ? updated : cur);
+      return updated;
     } catch (e) {
       console.error('sharePost:', e);
+      return null;
     }
   }
 

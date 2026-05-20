@@ -124,7 +124,7 @@ export default function ChatPage({ user }) {
 
         <div className={styles.chatList}>
           {chats.length === 0 ? (
-            <div className={styles.emptyChat}><MessageCircle size={24} /><span>Busca a alguien para empezar</span></div>
+            <div className={styles.emptyChat}><span>Busca a alguien para empezar</span></div>
           ) : chats.map(chat => (
             <button key={chat.id} className={activeChat?.id === chat.id ? styles.active : ''} onClick={() => setActiveChat(chat)}>
               <Avatar name={chat.other_username} />
