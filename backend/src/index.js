@@ -23,20 +23,26 @@ const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 const socketsByUser = new Map();
 
+function normalizeOrigin(origin) {
+  return String(origin || '').trim().replace(/\/+$/, '');
+}
+
 const defaultAllowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
 const envAllowedOrigins = (process.env.CLIENT_URL || '')
   .split(',')
-  .map((origin) => origin.trim())
+  .map((origin) => normalizeOrigin(origin))
   .filter(Boolean);
-const allowedOrigins = [...new Set([...defaultAllowedOrigins, ...envAllowedOrigins])];
+const allowedOrigins = [...new Set([...defaultAllowedOrigins.map(normalizeOrigin), ...envAllowedOrigins])];
 const devOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+const vercelPreviewPattern = /^https:\/\/[a-z0-9-]+\.vercel\.app$/i;
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin) || devOriginPattern.test(origin)) {
+    const normalized = normalizeOrigin(origin);
+    if (!origin || allowedOrigins.includes(normalized) || devOriginPattern.test(normalized) || vercelPreviewPattern.test(normalized)) {
       return callback(null, true);
     }
-    return callback(new Error(`Not allowed by CORS: ${origin}`));
+    return callback(new Error(`Not allowed by CORS: ${normalized}`));
   }
 }));
 app.use(securityMiddleware);
