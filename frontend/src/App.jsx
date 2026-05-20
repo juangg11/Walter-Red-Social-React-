@@ -114,7 +114,10 @@ function App() {
   useEffect(() => {
     if (!user) return undefined;
 
-    const ws = new WebSocket(getChatSocketUrl());
+    const wsUrl = getChatSocketUrl();
+    if (!wsUrl) return undefined;
+
+    const ws = new WebSocket(wsUrl);
 
     ws.onmessage = event => {
       const payload = JSON.parse(event.data);
@@ -136,6 +139,8 @@ function App() {
         });
       }
     };
+
+    ws.onerror = () => {};
 
     return () => ws.close();
   }, [user, settings.notifications.chatToasts, settings.notifications.desktopMessages]);

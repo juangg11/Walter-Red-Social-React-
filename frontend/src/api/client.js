@@ -40,5 +40,14 @@ export default async function request(path, options = {}) {
 
 export function getChatSocketUrl() {
   const token = localStorage.getItem('token') || '';
-  return `${WS_URL}?token=${encodeURIComponent(token)}`;
+  const configured = (WS_URL || '').trim();
+  let base = configured;
+
+  if (!base && URL) {
+    const apiBase = String(URL).replace(/\/+$/, '');
+    base = apiBase.replace(/^http/, 'ws').replace(/\/api$/, '') + '/ws';
+  }
+
+  if (!base) return null;
+  return `${base}?token=${encodeURIComponent(token)}`;
 }
