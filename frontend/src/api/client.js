@@ -15,9 +15,26 @@ export default async function request(path, options = {}) {
     },
   });
 
-  const data = await res.json();
-  if (!res.ok) 
-    throw new Error(data.error);
+  let data = {};
+  try {
+    data = await res.json();
+  } catch {
+    data = {};
+  }
+
+  if (!res.ok) {
+    const message = data?.error || `Error HTTP ${res.status}`;
+
+    if (res.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('auth:unauthorized', { detail: { message } }));
+      }
+    }
+
+    throw new Error(message);
+  }
   return data;
 }
 

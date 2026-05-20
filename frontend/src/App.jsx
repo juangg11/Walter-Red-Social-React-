@@ -146,6 +146,16 @@ function App() {
     return () => window.clearTimeout(timer);
   }, [chatToast]);
 
+  useEffect(() => {
+    function onUnauthorized() {
+      handleLogout();
+      navigate('/', { replace: true });
+    }
+
+    window.addEventListener('auth:unauthorized', onUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', onUnauthorized);
+  }, [navigate]);
+
   function handleLogin(userData) {
     setUser(userData);
   }
