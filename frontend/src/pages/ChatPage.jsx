@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import EmojiPicker from 'emoji-picker-react';
 import { ImagePlus, MessageCircle, Reply, Search, Send, Smile } from 'lucide-react';
-import request from '../api/client';
+import request, { getChatSocketUrl } from '../api/client';
 import { uploadToCloudinary } from '../utils/cloudinary';
 import styles from './ChatPage.module.css';
 
@@ -47,11 +47,48 @@ export default function ChatPage({ user }) {
     request(`/chat/${activeChat.id}/mensajes`)
       .then(data => {
         if (!ignore) setMessages(data);
+      })
+      .catch(() => {
+        if (!ignore) setMessages([]);
       });
 
     return () => {
       ignore = true;
     };
+  }, [activeChat?.id]);
+
+  useEffect(() => {
+    const wsUrl = getChatSocketUrl();
+    if (!wsUrl) return undefined;
+
+    const ws = new WebSocket(wsUrl);
+
+    ws.onmessage = event => {
+      try {
+        const payload = JSON.parse(event.data);
+        if (payload.type !== 'chat:message') return;
+        const message = payload.message;
+        if (!message?.chat_id) return;
+
+        setChats(cur => cur.map((chat) => (
+          Number(chat.id) === Number(message.chat_id)
+            ? {
+              ...chat,
+              ultimo_mensaje: message.contenido || 'Imagen',
+              ultima_imagen: message.media_url || null,
+              ultimo_mensaje_fecha: message.fecha_creacion,
+            }
+            : chat
+        )));
+
+        if (Number(activeChat?.id) === Number(message.chat_id)) {
+          setMessages(cur => cur.some(m => m.id === message.id) ? cur : [...cur, message]);
+        }
+      } catch {}
+    };
+
+    ws.onerror = () => {};
+    return () => ws.close();
   }, [activeChat?.id]);
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages.length]);
   useEffect(() => {
@@ -62,7 +99,8 @@ export default function ChatPage({ user }) {
       }
 
       request(`/chat/usuarios?q=${encodeURIComponent(query.trim())}`)
-        .then(data => setUsers(data));
+        .then(data => setUsers(data))
+        .catch(() => setUsers([]));
     }, 300);
     return () => clearTimeout(timer);
   }, [query]);

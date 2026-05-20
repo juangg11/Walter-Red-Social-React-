@@ -113,19 +113,34 @@ export const ChatModel = {
       return rows;
     } catch (error) {
       if (!isLegacySchemaError(error)) throw error;
-      const [rows] = await pool.query(
-        `SELECT m.*, u.username, u.avatar_url,
-          NULL AS media_url, NULL AS media_resource_type,
-          r.contenido AS respuesta_contenido, ru.username AS respuesta_username
-         FROM mensajes_chat m
-         LEFT JOIN users u ON u.id = m.usuario_id
-         LEFT JOIN mensajes_chat r ON r.id = m.respuesta_a_id
-         LEFT JOIN users ru ON ru.id = r.usuario_id
-         WHERE m.chat_id = ?
-         ORDER BY m.fecha_creacion ASC`,
-        [chatId]
-      );
-      return mapLegacyMessages(rows);
+      try {
+        const [rows] = await pool.query(
+          `SELECT m.*, u.username, u.avatar_url,
+            NULL AS media_url, NULL AS media_resource_type,
+            r.contenido AS respuesta_contenido, ru.username AS respuesta_username
+           FROM mensajes_chat m
+           LEFT JOIN users u ON u.id = m.usuario_id
+           LEFT JOIN mensajes_chat r ON r.id = m.respuesta_a_id
+           LEFT JOIN users ru ON ru.id = r.usuario_id
+           WHERE m.chat_id = ?
+           ORDER BY m.fecha_creacion ASC`,
+          [chatId]
+        );
+        return mapLegacyMessages(rows);
+      } catch (legacyError) {
+        if (!isLegacySchemaError(legacyError)) throw legacyError;
+        const [rows] = await pool.query(
+          `SELECT m.*, u.username, u.avatar_url,
+            NULL AS media_url, NULL AS media_resource_type,
+            NULL AS respuesta_contenido, NULL AS respuesta_username
+           FROM mensajes_chat m
+           LEFT JOIN users u ON u.id = m.usuario_id
+           WHERE m.chat_id = ?
+           ORDER BY m.fecha_creacion ASC`,
+          [chatId]
+        );
+        return mapLegacyMessages(rows);
+      }
     }
   },
 
@@ -143,10 +158,18 @@ export const ChatModel = {
       );
     } catch (error) {
       if (!isLegacySchemaError(error)) throw error;
-      [result] = await pool.query(
-        'INSERT INTO mensajes_chat (chat_id, usuario_id, contenido, respuesta_a_id) VALUES (?, ?, ?, ?)',
-        [chatId, userId, contenido, respuesta_a_id]
-      );
+      try {
+        [result] = await pool.query(
+          'INSERT INTO mensajes_chat (chat_id, usuario_id, contenido, respuesta_a_id) VALUES (?, ?, ?, ?)',
+          [chatId, userId, contenido, respuesta_a_id]
+        );
+      } catch (legacyInsertError) {
+        if (!isLegacySchemaError(legacyInsertError)) throw legacyInsertError;
+        [result] = await pool.query(
+          'INSERT INTO mensajes_chat (chat_id, usuario_id, contenido) VALUES (?, ?, ?)',
+          [chatId, userId, contenido]
+        );
+      }
     }
 
     await pool.query('UPDATE chats SET estado = "activo", fecha_actualizacion = CURRENT_TIMESTAMP WHERE id = ?', [chatId]);
