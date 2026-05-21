@@ -180,10 +180,10 @@ export default function Communities({ user, onCommunityCreated }) {
               <div key={c.id} className={styles.comunidadesCard}>
                 <div className={styles.cardHeader}>
                   <div className={styles.cardAvatar} style={{ background: colors.avatar, color: colors.avatarText }}>
-                    w/ {initials(c.nombre)}
+                    {initials(c.nombre)}
                   </div>
                   <div className={styles.cardInfo}>
-                    <p className={styles.cardName}>{c.nombre}</p>
+                    <p className={styles.cardName}>w/{c.nombre}</p>
                     <span className={styles.tagItem} style={{ background: colors.tag, color: colors.tagText }}>{cat}</span>
                   </div>
                 </div>
