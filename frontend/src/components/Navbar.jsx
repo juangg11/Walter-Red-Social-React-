@@ -59,13 +59,6 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
 
           <div className={styles.navCenterIcons}>
             <span
-              className={`${styles.navIconItem} ${activeTab === 'feed' ? styles.navIconItemActive : ''}`}
-              onClick={() => onTabChange?.('feed')}
-              title="Inicio"
-            >
-              <Home size={20} />
-            </span>
-            <span
               className={`${styles.navIconItem} ${activeTab === 'messages' ? styles.navIconItemActive : ''}`}
               onClick={() => onTabChange?.('messages')}
               title="Mensajes"
@@ -78,6 +71,13 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
               title="Comunidades"
             >
               <Users size={20} />
+            </span>
+            <span
+              className={`${styles.navIconItem} ${activeTab === 'feed' ? styles.navIconItemActive : ''}`}
+              onClick={() => onTabChange?.('feed')}
+              title="Inicio"
+            >
+              <Home size={20} />
             </span>
             <span
               className={`${styles.navIconItem} ${activeTab === 'profile' ? styles.navIconItemActive : ''}`}

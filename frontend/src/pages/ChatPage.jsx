@@ -179,7 +179,7 @@ export default function ChatPage({ user }) {
         {activeChat ? (
           <>
             <header className={styles.chatHeader}>
-              <Avatar name={activeChat.other_username} />
+              <Avatar name={{ avatar_url: activeChat.other_username?.avatar_url, username: activeChat.other_username?.username }} />
               <div>
                 <h2>w/{activeChat.other_username}</h2>
               </div>
