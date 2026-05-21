@@ -154,13 +154,9 @@ export default function ChatPage({ user }) {
             {users.map(found => (
               <button key={found.id} onClick={() => openChat(found.id)}>
                 <div className={styles.avatarSmall}>
-                  {found.avatar_url ? (
-                    <img src={found.avatar_url} alt={found.username} />
-                  ) : (
-                    <span>{found.username.slice(0, 2).toUpperCase()}</span>
-                  )}
+                  <span>{found.username.slice(0, 2).toUpperCase()}</span>
                 </div>
-                <span>w/{found.username}</span>
+                <span>{found.username}</span>
               </button>
             ))}
           </div>
@@ -172,14 +168,10 @@ export default function ChatPage({ user }) {
           ) : chats.map(chat => (
             <button key={chat.id} className={activeChat?.id === chat.id ? styles.active : ''} onClick={() => setActiveChat(chat)}>
               <div className={styles.avatarSmall}>
-                {chat.other_user_avatar_url ? (
-                  <img src={chat.other_user_avatar_url} alt={chat.other_username} />
-                ) : (
-                  <span>{String(chat.other_username).slice(0, 2).toUpperCase()}</span>
-                )}
+                <span>{String(chat.other_username).slice(0, 2).toUpperCase()}</span>
               </div>
               <div>
-                <strong>w/{chat.other_username}</strong>
+                <strong>{chat.other_username}</strong>
                 <span>{chat.ultimo_mensaje || (chat.ultima_imagen ? 'Imagen' : 'Sin mensajes aún')}</span>
               </div>
             </button>
@@ -192,14 +184,10 @@ export default function ChatPage({ user }) {
           <>
             <header className={styles.chatHeader}>
               <div className={styles.chatHeaderAvatar}>
-                {activeChat.other_username?.avatar_url ? (
-                  <img src={activeChat.other_username.avatar_url} alt={activeChat.other_username} />
-                ) : (
-                  <span>{String(activeChat.other_username).slice(0, 2).toUpperCase()}</span>
-                )}
+                <span>{String(activeChat.other_username).slice(0, 2).toUpperCase()}</span>
               </div>
               <div>
-                <h2>w/{activeChat.other_username}</h2>
+                <h2>{activeChat.other_username}</h2>
               </div>
             </header>
 
@@ -210,7 +198,7 @@ export default function ChatPage({ user }) {
                   <div key={message.id} className={`${styles.messageRow} ${mine ? styles.mine : ''}`}>
                     <div className={styles.messageBubble}>
                       {message.respuesta_a_id && (
-                        <div className={styles.messageReply}>↳ w/{message.respuesta_username}: {message.respuesta_contenido || 'Imagen'}</div>
+                        <div className={styles.messageReply}>↳ {message.respuesta_username}: {message.respuesta_contenido || 'Imagen'}</div>
                       )}
                       {message.contenido && <p>{message.contenido}</p>}
                       {message.media_url && (
@@ -229,7 +217,7 @@ export default function ChatPage({ user }) {
             <footer className={styles.chatComposer} ref={composerRef}>
               {replyTo && (
                 <div className={styles.composerReply}>
-                  Respondiendo a w/{replyTo.username}: {replyTo.contenido || 'Imagen'}
+                  Respondiendo a {replyTo.username}: {replyTo.contenido || 'Imagen'}
                   <button onClick={() => setReplyTo(null)}>×</button>
                 </div>
               )}
