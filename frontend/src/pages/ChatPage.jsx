@@ -172,8 +172,8 @@ export default function ChatPage({ user }) {
           ) : chats.map(chat => (
             <button key={chat.id} className={activeChat?.id === chat.id ? styles.active : ''} onClick={() => setActiveChat(chat)}>
               <div className={styles.avatarSmall}>
-                {chat.other_username_avatar_url ? (
-                  <img src={chat.other_username_avatar_url} alt={chat.other_username} />
+                {chat.other_user_avatar_url ? (
+                  <img src={chat.other_user_avatar_url} alt={chat.other_username} />
                 ) : (
                   <span>{String(chat.other_username).slice(0, 2).toUpperCase()}</span>
                 )}
