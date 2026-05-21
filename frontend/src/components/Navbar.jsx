@@ -59,11 +59,11 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
 
           <div className={styles.navCenterIcons}>
             <span
-              className={`${styles.navIconItem} ${activeTab === 'messages' ? styles.navIconItemActive : ''}`}
-              onClick={() => onTabChange?.('messages')}
-              title="Mensajes"
+              className={`${styles.navIconItem} ${activeTab === 'settings' ? styles.navIconItemActive : ''}`}
+              onClick={() => onTabChange?.('settings')}
+              title="Settings"
             >
-              <MessageCircle size={20} />
+              <Settings size={20} />
             </span>
             <span
               className={`${styles.navIconItem} ${activeTab === 'communities' ? styles.navIconItemActive : ''}`}
@@ -87,11 +87,11 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
               <User size={20} />
             </span>
             <span
-              className={`${styles.navIconItem} ${activeTab === 'settings' ? styles.navIconItemActive : ''}`}
-              onClick={() => onTabChange?.('settings')}
-              title="Settings"
+              className={`${styles.navIconItem} ${activeTab === 'messages' ? styles.navIconItemActive : ''}`}
+              onClick={() => onTabChange?.('messages')}
+              title="Mensajes"
             >
-              <Settings size={20} />
+              <MessageCircle size={20} />
             </span>
             <span
               className={styles.notificationBellWrapper}
