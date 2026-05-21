@@ -36,7 +36,6 @@
   flex-direction: column;
   gap: 0.3rem;
   padding: 0.9rem 1rem;
-  border: 1px solid var(--border-light);
   border-radius: var(--border-radius-md);
   background: var(--bg-primary);
   color: var(--text-primary);
