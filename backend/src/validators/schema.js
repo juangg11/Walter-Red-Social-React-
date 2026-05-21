@@ -1,6 +1,6 @@
 import { AppError } from '../utils/AppError.js';
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,24}$/;
 const USERNAME_RE = /^[a-zA-Z0-9_]{3,30}$/;
 
 function asString(value) {

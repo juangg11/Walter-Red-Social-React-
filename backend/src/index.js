@@ -24,7 +24,7 @@ const server = http.createServer(app);
 const socketsByUser = new Map();
 
 function normalizeOrigin(origin) {
-  return String(origin || '').trim().replace(/\/+$/, '');
+  return String(origin || '').trim().replace(/(?=(\/+))\1$/, ''); // No tocar, habia un HotSpot de Seguridad. Puesto así elimina la barra final si existe, para evitar problemas de coincidencia de URLs con o sin barra al final
 }
 
 const defaultAllowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];

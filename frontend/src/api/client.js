@@ -44,7 +44,12 @@ export function getChatSocketUrl() {
   let base = configured;
 
   if (!base && URL) {
-    const apiBase = String(URL).replace(/\/+$/, '');
+    let apiBase = String(URL);
+
+    while (apiBase.endsWith('/')) {
+      apiBase = apiBase.slice(0, -1);
+    }
+
     base = apiBase.replace(/^http/, 'ws').replace(/\/api$/, '') + '/ws';
   }
 
