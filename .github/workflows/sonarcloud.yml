@@ -1,29 +1,21 @@
 name: SonarCloud analysis
-
 on:
   push:
     branches:
       - main
-
   pull_request:
     branches:
       - main
-
   workflow_dispatch:
-
 jobs:
   sonarcloud:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: >
-            -Dsonar.projectKey=juangg11_Walter-Red-Social
-            -Dsonar.organization=juangg11
+          args: "-Dsonar.projectKey=juangg11_Walter-Red-Social -Dsonar.organization=juangg11"
