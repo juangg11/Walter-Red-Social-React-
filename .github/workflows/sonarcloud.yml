@@ -1,15 +1,28 @@
-steps:
-  - uses: actions/checkout@v4
+name: SonarCloud analysis
 
-  - name: Analyze with SonarCloud
-    uses: SonarSource/sonarcloud-github-action@master
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
 
-    env:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+permissions:
+  pull-requests: read
 
-    with:
-      args: >
-        -Dsonar.projectKey=Walter-Red-Social
-        -Dsonar.organization=juan-dev
+jobs:
+  Analysis:
+    runs-on: ubuntu-latest
 
-      projectBaseDir: .
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: .
+          args: |
+            -Dsonar.projectKey=Walter-Red-Social
+            -Dsonar.organization=juan-dev
