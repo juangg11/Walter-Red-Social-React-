@@ -165,7 +165,7 @@ export default function UserPage({ user, onUserUpdate }) {
             <div className={styles.profileTitleBlock}>
               <div className={styles.profileTitleRow}>
                 <div>
-                  <h1>w/{profile.username}</h1>
+                  <h1>{profile.username}</h1>
                   <span>{profile.email}</span>
                 </div>
                 {!profile.is_me && (
@@ -218,7 +218,7 @@ export default function UserPage({ user, onUserUpdate }) {
                 {comments.length > 0 ? comments.map(comment => (
                   <article key={comment.id} className={styles.profileCommentCard}>
                     <div className={styles.profileCommentMeta}>
-                      <button type="button" className={styles.inlineUserLink} onClick={() => navigate(`/u/${profile.username}`)}>w/{profile.username}</button>
+                      <button type="button" className={styles.inlineUserLink} onClick={() => navigate(`/u/${profile.username}`)}>{profile.username}</button>
                       <span>en {comment.publicacion_titulo || 'Publicación'}</span>
                     </div>
                     <p>{comment.contenido}</p>
@@ -250,7 +250,7 @@ export default function UserPage({ user, onUserUpdate }) {
 
           <aside className={styles.profileSide}>
             <section className={styles.profilePanel}>
-              <h3>Sobre w/{profile.username}</h3>
+              <h3>Sobre {profile.username}</h3>
               <div className={styles.profileCreatedRow}>
                 <CalendarDays size={16} />
                 <span>{joinedDate}</span>
@@ -328,7 +328,7 @@ function UserList({ users = [], navigate, emptyText }) {
       {users.map(item => (
         <button key={item.id} type="button" className={styles.profileUserChip} onClick={() => navigate(`/u/${item.username}`)}>
           {item.avatar_url ? <img src={item.avatar_url} alt={item.username} /> : <span>{item.username.slice(0, 2).toUpperCase()}</span>}
-          <small>w/{item.username}</small>
+          <small>{item.username}</small>
         </button>
       ))}
     </div>

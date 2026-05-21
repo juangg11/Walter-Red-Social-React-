@@ -180,7 +180,7 @@ export default function Communities({ user, onCommunityCreated }) {
               <div key={c.id} className={styles.comunidadesCard}>
                 <div className={styles.cardHeader}>
                   <div className={styles.cardAvatar} style={{ background: colors.avatar, color: colors.avatarText }}>
-                    {initials(c.nombre)}
+                    w/ {initials(c.nombre)}
                   </div>
                   <div className={styles.cardInfo}>
                     <p className={styles.cardName}>{c.nombre}</p>
@@ -213,7 +213,7 @@ export default function Communities({ user, onCommunityCreated }) {
 
             <div style={{ marginBottom: '1rem' }}>
               <label className={styles.comunidadesLabel}>Nombre *</label>
-              <input type="text" placeholder="ej. w/JavaScript" value={mName} onChange={e => { setMName(e.target.value); setMError(''); }} className={styles.comunidadesInput} />
+              <input type="text" placeholder="ej. JavaScript" value={mName} onChange={e => { setMName(e.target.value); setMError(''); }} className={styles.comunidadesInput} />
             </div>
             <div style={{ marginBottom: '1rem' }}>
               <label className={styles.comunidadesLabel}>Descripción</label>
