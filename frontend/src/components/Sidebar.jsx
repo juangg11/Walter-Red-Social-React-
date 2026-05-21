@@ -49,7 +49,7 @@ export const CommunitiesSidebar = ({ communities = [], selectedCommunities = [],
                 onChange={() => toggleCommunity(community)}
                 onClick={e => e.stopPropagation()}
               />
-              <span>{community.nombre || 'Comunidad'}</span>
+              <span>w/{community.nombre || 'Comunidad'}</span>
             </div>
           );
         }) : (
