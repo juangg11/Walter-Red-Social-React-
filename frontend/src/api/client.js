@@ -24,7 +24,16 @@ function getToken() {
 
 export default async function request(path, options = {}) {
   const token = getToken();
-  const res = await fetch(`${URL}${path}`, {
+
+  const cleanPath = String(path).trim();
+
+  const isSafeRelativePath = /^\/(?!\/)/.test(cleanPath) && !cleanPath.includes('://');
+
+  if (!isSafeRelativePath) {
+    throw new Error('Ruta de petición no segura.');
+  }
+  
+  const res = await fetch(`${URL}${cleanPath}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
