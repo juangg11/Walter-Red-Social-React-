@@ -228,6 +228,78 @@
   transform: translateX(1.3rem) !important;
 }
 
+.editUsernameButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--navbar-icon);
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.editUsernameButton:hover {
+  color: var(--primary-hover);
+}
+
+.editUsernameInput {
+  border: 1px solid var(--border-light);
+  border-radius: 0.5rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.editUsernameInput:focus {
+  border-color: var(--primary);
+}
+
+.editUsernameActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.editUsernameActions button {
+  border: 0;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: inherit;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.editUsernameActions button:first-of-type {
+  background: var(--primary);
+  color: white;
+}
+
+.editUsernameActions button:first-of-type:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.editUsernameActions button:first-of-type:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.editUsernameActions button:last-of-type {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+}
+
+.editUsernameActions button:last-of-type:hover {
+  background: var(--bg-tertiary);
+}
+
 @media (max-width: 900px) {
   .settingsPage {
     padding: 1rem;

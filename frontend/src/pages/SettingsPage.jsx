@@ -103,19 +103,20 @@ export default function SettingsPage({ user, settings, onSettingsChange, onUserU
                   {editingUsername ? (
                     <>
                       <input
-                        className={styles.comunidadesInput}
-                        style={{ padding: '0.2rem 0.5rem', fontSize: '0.875rem' }}
+                        className={styles.editUsernameInput}
                         value={newUsername}
                         onChange={e => { setNewUsername(e.target.value.replace(/\s/g, '')); setUsernameStatus(''); }}
                         maxLength={30}
                         autoFocus
                       />
-                      <button type="button" onClick={handleSaveUsername} disabled={savingUsername}>
-                        {savingUsername ? '...' : 'Guardar'}
-                      </button>
-                      <button type="button" onClick={() => { setEditingUsername(false); setUsernameStatus(''); }}>
-                        Cancelar
-                      </button>
+                      <div className={styles.editUsernameActions}>
+                        <button type="button" onClick={handleSaveUsername} disabled={savingUsername}>
+                          {savingUsername ? '...' : 'Guardar'}
+                        </button>
+                        <button type="button" onClick={() => { setEditingUsername(false); setUsernameStatus(''); }}>
+                          Cancelar
+                        </button>
+                      </div>
                     </>
                   ) : (
                     <>
@@ -123,7 +124,7 @@ export default function SettingsPage({ user, settings, onSettingsChange, onUserU
                       <button
                         type="button"
                         onClick={() => { setNewUsername(user.username); setUsernameStatus(''); setEditingUsername(true); }}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                        className={styles.editUsernameButton}
                       >
                         <Pencil size={14} />
                       </button>
