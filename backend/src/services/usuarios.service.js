@@ -51,12 +51,19 @@ export const usuariosService = {
     };
   },
 
-  async updatePerfil(userId, { avatar_url, bio }) {
+  async updatePerfil(userId, { avatar_url, bio, username }) {
     const current = await UserModel.findById(userId);
     if (!current) throw new AppError(404, 'Usuario no encontrado');
+
+    if (username && username !== current.username) {
+      const exists = await UserModel.usernameExists(username);
+      if (exists) throw new AppError(400, 'El nombre de usuario ya existe');
+    }
+
     const user = await UserModel.updateProfile(userId, {
       avatar_url: avatar_url ?? current.avatar_url,
       bio: bio ?? current.bio,
+      username: username ?? current.username,
     });
     if (!user) throw new AppError(404, 'Usuario no encontrado');
     return user;

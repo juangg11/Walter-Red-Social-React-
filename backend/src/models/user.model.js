@@ -61,10 +61,10 @@ export const UserModel = {
     return rows[0] || null;
   },
 
-  async updateProfile(userId, { avatar_url, bio }) {
+  async updateProfile(userId, { avatar_url, bio, username }) {
     await pool.query(
-      'UPDATE users SET avatar_url = ?, bio = ? WHERE id = ?',
-      [avatar_url || null, bio || null, userId]
+      'UPDATE users SET avatar_url = ?, bio = ?, username = ? WHERE id = ?',
+      [avatar_url || null, bio || null, username || null, userId]
     );
     return this.findById(userId);
   },
