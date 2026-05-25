@@ -94,7 +94,7 @@ export default function Communities({ user, onCommunityCreated }) {
 
     setSaving(true);
     try {
-      await request('/comunidades', { method: 'POST', body: JSON.stringify({ nombre: name.startsWith('w/') ? name : 'w/' + name, descripcion: mDesc.trim() || null, categoria: mCat }) });
+      await request('/comunidades', { method: 'POST', body: JSON.stringify({ nombre: name.startsWith('w/') ? name.slice(2) : name, descripcion: mDesc.trim() || null, categoria: mCat }) });
       await fetchCommunities();
       onCommunityCreated?.();
       setShowModal(false);

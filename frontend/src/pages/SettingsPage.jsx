@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Bell, ImagePlus, Moon, Type, UserRound } from 'lucide-react';
+import { Bell, ImagePlus, Moon, Pencil, Type, UserRound } from 'lucide-react';
 import request from '../api/client';
 import { uploadToCloudinary } from '../utils/cloudinary';
 import styles from './SettingsPage.module.css';
@@ -9,11 +9,32 @@ export default function SettingsPage({ user, settings, onSettingsChange, onUserU
   const [avatarStatus, setAvatarStatus] = useState('');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [notificationStatus, setNotificationStatus] = useState('');
+  const [editingUsername, setEditingUsername] = useState(false);
+  const [newUsername, setNewUsername] = useState('');
+  const [usernameStatus, setUsernameStatus] = useState('');
+  const [savingUsername, setSavingUsername] = useState(false);
 
   const memberSince = user.fecha_creacion ? new Date(user.fecha_creacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Sin fecha disponible';
 
   function updateNotifications(patch) {
     onSettingsChange({ ...settings, notifications: { ...settings.notifications, ...patch } });
+  }
+
+  async function handleSaveUsername() {
+    const trimmed = newUsername.trim().replace(/\s/g, '');
+    if (!trimmed || trimmed === user.username) { setEditingUsername(false); return; }
+
+    setSavingUsername(true);
+    setUsernameStatus('');
+    try {
+      const updated = await request('/usuarios/perfil', { method: 'PATCH', body: JSON.stringify({ username: trimmed }) });
+      onUserUpdate(updated);
+      setEditingUsername(false);
+      setUsernameStatus('Nombre actualizado.');
+    } catch (error) {
+      setUsernameStatus(error.message);
+    }
+    setSavingUsername(false);
   }
 
   async function handleAvatarSelection(event) {
@@ -77,7 +98,38 @@ export default function SettingsPage({ user, settings, onSettingsChange, onUserU
                 {user.avatar_url ? <img src={user.avatar_url} alt="Avatar" /> : <span>{user.username.slice(0, 2).toUpperCase()}</span>}
               </div>
               <div className={styles.settingsAvatarCopy}>
-                <strong>w/{user.username}</strong>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  {editingUsername ? (
+                    <>
+                      <input
+                        className={styles.comunidadesInput}
+                        style={{ padding: '0.2rem 0.5rem', fontSize: '0.875rem' }}
+                        value={newUsername}
+                        onChange={e => { setNewUsername(e.target.value.replace(/\s/g, '')); setUsernameStatus(''); }}
+                        maxLength={30}
+                        autoFocus
+                      />
+                      <button type="button" onClick={handleSaveUsername} disabled={savingUsername}>
+                        {savingUsername ? '...' : 'Guardar'}
+                      </button>
+                      <button type="button" onClick={() => { setEditingUsername(false); setUsernameStatus(''); }}>
+                        Cancelar
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <strong>{user.username}</strong>
+                      <button
+                        type="button"
+                        onClick={() => { setNewUsername(user.username); setUsernameStatus(''); setEditingUsername(true); }}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                      >
+                        <Pencil size={14} />
+                      </button>
+                    </>
+                  )}
+                </div>
+                {usernameStatus && <p className={styles.settingsInlineStatus}>{usernameStatus}</p>}
                 <span>{user.email}</span>
                 <small>Miembro desde {memberSince}</small>
               </div>
