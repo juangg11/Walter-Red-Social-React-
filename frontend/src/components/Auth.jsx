@@ -1,7 +1,22 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import request from '../api/client';
 import { Mail, Lock, User, X, MessageSquare, HelpCircle, ArrowRight } from 'lucide-react';
 import styles from './Auth.module.css';
+
+// Variantes de animación reutilizables para limpiar el árbol de componentes
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 } // Hace que los hijos aparezcan uno detrás de otro
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+};
 
 export default function Auth({ onLogin }) {
   const [loading, setLoading] = useState(false);
@@ -58,17 +73,36 @@ export default function Auth({ onLogin }) {
 
   return (
     <div className={styles.landingPage}>
-      <div className={styles.auroraGlow1}></div>
-      <div className={styles.auroraGlow2}></div>
+      {/* Fondo de luces ambientales con pulsación suave */}
+      <motion.div 
+        className={styles.auroraGlow1}
+        animate={{ scale: [1, 1.05, 1], opacity: [0.8, 1, 0.8] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div 
+        className={styles.auroraGlow2}
+        animate={{ scale: [1, 1.08, 1], opacity: [0.7, 0.9, 0.7] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      />
 
       <main className={styles.mainContent}>
         <div className={styles.heroGrid}>
-          <div className={styles.heroLeft}>
-            <h1 className={styles.mainTitle}>Encuentra tu comunidad.</h1>
-            <p className={styles.tagline}>
+          
+          <motion.div 
+            className={styles.heroLeft}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.h1 variants={itemVariants} className={styles.mainTitle}>
+              Encuentra tu comunidad.
+            </motion.h1>
+            
+            <motion.p variants={itemVariants} className={styles.tagline}>
               Únete a <span className={styles.brandText}>Walter</span>, el espacio descentralizado donde todas las ideas tienen cabida, los hilos cobran vida y tus intereses encuentran su hogar en una comunidad.
-            </p>
-            <div className={styles.actionButtons}>
+            </motion.p>
+            
+            <motion.div variants={itemVariants} className={styles.actionButtons}>
               <button className={styles.primaryActionBtn} onClick={() => openAuthModal(true)}>
                 Comenzar ahora
                 <ArrowRight size={18} className={styles.arrowIcon} />
@@ -76,18 +110,23 @@ export default function Auth({ onLogin }) {
               <button className={styles.secondaryActionBtn} onClick={() => openAuthModal(false)}>
                 Iniciar sesión
               </button>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div className={styles.heroRight}>
+          <motion.div 
+            className={styles.heroRight}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          >
             <div className={styles.giantLogoContainer}>
               <span className={styles.textLogoMark}>W</span>
             </div>
-          </div>
+          </motion.div>
         </div>
       </main>
 
-      {/* Panel informativo — siempre en el DOM, abre/cierra con CSS */}
+      {/* Cajón inferior de información */}
       <div className={`${styles.infoDrawer} ${activeFooterTab ? styles.infoDrawerOpen : ''}`}>
         <div className={styles.infoDrawerContent}>
           <button className={styles.closeDrawerBtn} onClick={() => setActiveFooterTab(null)}>
@@ -128,73 +167,103 @@ export default function Auth({ onLogin }) {
         <p className={styles.copyright}>&copy; {new Date().getFullYear()} Walter - Red Social.</p>
       </footer>
 
-      {isModalOpen && (
-        <div className={styles.modalOverlay} onClick={closeAuthModal}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <button className={styles.modalClose} onClick={closeAuthModal} title="Cerrar">
-              <X size={20} />
-            </button>
-            <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>
-                {isSignUp ? 'Crea tu cuenta en Walter' : 'Te damos la bienvenida'}
-              </h2>
-              <p className={styles.modalSubtitle}>
-                {isSignUp ? 'Completa los campos para unirte a la red.' : 'Introduce tus credenciales para continuar.'}
-              </p>
-            </div>
-            <form onSubmit={isSignUp ? handleSignUp : handleLogin} className={styles.form}>
-              {isSignUp && (
+      {/* AnimatePresence permite animar elementos cuando son desmontados (al cerrar la modal) */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div 
+            className={styles.modalOverlay} 
+            onClick={closeAuthModal}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div 
+              className={styles.modalContent} 
+              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.9, y: 15, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 15, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
+            >
+              <button className={styles.modalClose} onClick={closeAuthModal} title="Cerrar">
+                <X size={20} />
+              </button>
+              <div className={styles.modalHeader}>
+                <h2 className={styles.modalTitle}>
+                  {isSignUp ? 'Crea tu cuenta en Walter' : 'Te damos la bienvenida'}
+                </h2>
+                <p className={styles.modalSubtitle}>
+                  {isSignUp ? 'Completa los campos para unirte a la red.' : 'Introduce tus credenciales para continuar.'}
+                </p>
+              </div>
+              
+              <form onSubmit={isSignUp ? handleSignUp : handleLogin} className={styles.form}>
+                <AnimatePresence mode="wait">
+                  {isSignUp && (
+                    <motion.div 
+                      className={styles.inputGroup}
+                      initial={{ height: 0, opacity: 0, marginBottom: 0 }}
+                      animate={{ height: "auto", opacity: 1, marginBottom: "1.15rem" }}
+                      exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ overflow: 'hidden' }}
+                    >
+                      <User size={18} className={styles.inputIcon} />
+                      <input
+                        type="text"
+                        placeholder="Nombre de usuario"
+                        value={username}
+                        onChange={e => setUsername(e.target.value.replace(/\s/g, ''))}
+                        required
+                        maxLength={30}
+                        autoComplete="username"
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                
                 <div className={styles.inputGroup}>
-                  <User size={18} className={styles.inputIcon} />
+                  <Mail size={18} className={styles.inputIcon} />
                   <input
-                    type="text"
-                    placeholder="Nombre de usuario"
-                    value={username}
-                    onChange={e => setUsername(e.target.value.replace(/\s/g, ''))}
+                    type="email"
+                    placeholder="Correo electrónico"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                     required
-                    maxLength={30}
-                    autoComplete="username"
+                    autoComplete="email"
                   />
                 </div>
-              )}
-              <div className={styles.inputGroup}>
-                <Mail size={18} className={styles.inputIcon} />
-                <input
-                  type="email"
-                  placeholder="Correo electrónico"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                />
+                <div className={styles.inputGroup}>
+                  <Lock size={18} className={styles.inputIcon} />
+                  <input
+                    type="password"
+                    placeholder="Contraseña"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    required
+                    autoComplete="current-password"
+                  />
+                </div>
+                
+                {error && <p className={styles.errorText}>{error}</p>}
+                
+                <button type="submit" disabled={loading} className={styles.submitBtn}>
+                  {loading ? 'Procesando...' : (isSignUp ? 'Registrarse y Entrar' : 'Iniciar Sesión')}
+                </button>
+              </form>
+              
+              <div className={styles.toggleContainer}>
+                <p className={styles.toggleText}>
+                  {isSignUp ? '¿Ya formas parte de Walter?' : '¿Aún no tienes cuenta?'}
+                </p>
+                <button onClick={() => { setIsSignUp(!isSignUp); setError(''); }} className={styles.toggleBtn}>
+                  {isSignUp ? 'Acceder con mi cuenta' : 'Crear una cuenta nueva'}
+                </button>
               </div>
-              <div className={styles.inputGroup}>
-                <Lock size={18} className={styles.inputIcon} />
-                <input
-                  type="password"
-                  placeholder="Contraseña"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                />
-              </div>
-              {error && <p className={styles.errorText}>{error}</p>}
-              <button type="submit" disabled={loading} className={styles.submitBtn}>
-                {loading ? 'Procesando...' : (isSignUp ? 'Registrarse y Entrar' : 'Iniciar Sesión')}
-              </button>
-            </form>
-            <div className={styles.toggleContainer}>
-              <p className={styles.toggleText}>
-                {isSignUp ? '¿Ya formas parte de Walter?' : '¿Aún no tienes cuenta?'}
-              </p>
-              <button onClick={() => { setIsSignUp(!isSignUp); setError(''); }} className={styles.toggleBtn}>
-                {isSignUp ? 'Acceder con mi cuenta' : 'Crear una cuenta nueva'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
