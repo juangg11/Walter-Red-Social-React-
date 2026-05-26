@@ -61,15 +61,20 @@ const swaggerOptions = {
     },
     servers: [
       {
+        url: 'https://walter-red-social.onrender.com/api',
+        description: 'Servidor de Producción (Render)'
+      },
+      {
         url: `http://localhost:${PORT}/api`,
         description: 'Servidor Local de Desarrollo'
-      },
+      }
     ],
   },
   apis: ['./routes/*.js'], 
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use('/api/auth', authRoutes);
@@ -127,6 +132,5 @@ app.set('broadcastChatMessage', async (message, recipients = []) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`Documentación disponible en http://localhost:${PORT}/api-docs`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
