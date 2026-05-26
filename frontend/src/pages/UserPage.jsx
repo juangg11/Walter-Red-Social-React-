@@ -5,6 +5,7 @@ import request from '../api/client';
 import { PostCard } from '../components/Feed';
 import PostModal from '../components/PostModal';
 import { computeVote } from '../utils/computeVote';
+import { addCacheBust } from '../utils/imageCacheBust';
 import styles from './UserPage.module.css';
 
 const TABS = [
@@ -165,7 +166,7 @@ export default function UserPage({ user, onUserUpdate }) {
           <div className={styles.profileCover} />
           <div className={styles.profileHeaderBody}>
             <div className={styles.profileAvatarLarge}>
-              {profile.avatar_url ? <img src={profile.avatar_url} alt={profile.username} /> : <span>{profile.username.slice(0, 2).toUpperCase()}</span>}
+              {profile.avatar_url ? <img src={addCacheBust(profile.avatar_url)} alt={profile.username} /> : <span>{profile.username.slice(0, 2).toUpperCase()}</span>}
             </div>
 
             <div className={styles.profileTitleBlock}>
@@ -333,7 +334,7 @@ function UserList({ users = [], navigate, emptyText }) {
     <div className={styles.profileUserList}>
       {users.map(item => (
         <button key={item.id} type="button" className={styles.profileUserChip} onClick={() => navigate(`/u/${item.username}`)}>
-          {item.avatar_url ? <img src={item.avatar_url} alt={item.username} /> : <span>{item.username.slice(0, 2).toUpperCase()}</span>}
+          {item.avatar_url ? <img src={addCacheBust(item.avatar_url)} alt={item.username} /> : <span>{item.username.slice(0, 2).toUpperCase()}</span>}
           <small>{item.username}</small>
         </button>
       ))}

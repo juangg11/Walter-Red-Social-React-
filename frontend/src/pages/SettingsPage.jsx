@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { Bell, ImagePlus, Moon, Pencil, Type, UserRound } from 'lucide-react';
 import request from '../api/client';
 import { uploadToCloudinary } from '../utils/cloudinary';
+import { addCacheBust } from '../utils/imageCacheBust';
 import styles from './SettingsPage.module.css';
 
 export default function SettingsPage({ user, settings, onSettingsChange, onUserUpdate }) {
@@ -96,7 +97,7 @@ export default function SettingsPage({ user, settings, onSettingsChange, onUserU
           <div className={styles.settingsAccountGrid}>
             <div className={styles.settingsAvatarBlock}>
               <div className={styles.settingsAvatarFrame}>
-                {user.avatar_url ? <img src={user.avatar_url} alt="Avatar" /> : <span>{user.username.slice(0, 2).toUpperCase()}</span>}
+                {user.avatar_url ? <img src={addCacheBust(user.avatar_url)} alt="Avatar" /> : <span>{user.username.slice(0, 2).toUpperCase()}</span>}
               </div>
               <div className={styles.settingsAvatarCopy}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

@@ -18,7 +18,8 @@ export const authService = {
     await UserModel.create({ id, email, username, passwordHash });
 
     const token = jwt.sign({ id, email, username }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    return { token, user: { id, email, username } };
+    const user = await UserModel.findById(id);
+    return { token, user: { id: user.id, email: user.email, username: user.username, avatar_url: user.avatar_url, bio: user.bio, fecha_creacion: user.fecha_creacion } };
   },
 
   async login({ email, password }) {
@@ -34,7 +35,7 @@ export const authService = {
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
-    return { token, user: { id: user.id, email: user.email, username: user.username } };
+    return { token, user: { id: user.id, email: user.email, username: user.username, avatar_url: user.avatar_url, bio: user.bio, fecha_creacion: user.fecha_creacion } };
   },
 
   async checkUsername(username) {

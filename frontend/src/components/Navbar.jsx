@@ -2,6 +2,7 @@ import { Search, Home, User, LogOut, Bell, Users, MessageCircle, Settings } from
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import request from '../api/client';
+import { addCacheBust } from '../utils/imageCacheBust';
 import styles from './Navbar.module.css';
 
 export default function Navbar({ user, onSearchChange, notificationCount = 0, activeTab, onTabChange, onLogout, onNotificationsRead }) {
@@ -110,7 +111,7 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
           <div className={styles.navRight}>
             <div className={styles.profileMenu}>
               {user?.avatar_url ? (
-                <img className={styles.navUserAvatar} src={user.avatar_url} alt={user.username} />
+                <img className={styles.navUserAvatar} src={addCacheBust(user.avatar_url)} alt={user.username} />
               ) : (
                 <span className={styles.navUserAvatar}>{user?.username?.slice(0, 2).toUpperCase()}</span>
               )}
