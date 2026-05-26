@@ -109,64 +109,49 @@
   position: relative;
   display: inline-block;
   user-select: none;
-  overflow: visible; 
-  padding: 1rem;   
+  overflow: visible;
+  padding: 1rem;
 }
 
-/* LA "W" GIGANTE - SIN SALTOS VISUALES NI LÍNEAS DURAS */
+/* LA "W" GIGANTE - DEGRADADO CONTINUO SIN SALTOS */
 .textLogoMark {
   font-size: clamp(14rem, 24vw, 26rem);
   font-weight: 900;
   font-family: 'Montserrat', 'Arial Black', system-ui, sans-serif;
   display: block;
-  line-height: 0.9; 
+  line-height: 0.9;
   letter-spacing: -12px;
 
-  /* Márgenes de seguridad contra mutilación de bordes */
-  padding-right: 3rem; 
+  padding-right: 3rem;
   padding-bottom: 2rem;
   margin-right: -3rem;
 
-  /* NUEVO DEGRADADO SIMÉTRICO: 
-    Empieza en text-primary (0%), viaja por los colores, y regresa exactamente a text-primary (100%).
-    Al expandir el tamaño a 400% horizontalmente, creamos un lienzo idóneo para un desplazamiento sin fisuras.
-  */
   background: linear-gradient(
     120deg,
-    var(--text-primary) 0%,
-    var(--primary) 15%,
-    #aa0e4a 30%,
-    var(--primary) 45%,
-    var(--text-primary) 50%,
-    var(--primary) 55%,
-    #aa0e4a 70%,
-    var(--primary) 85%,
-    var(--text-primary) 100%
+    var(--text-primary),
+    var(--primary),
+    #aa0e4a,
+    var(--primary),
+    var(--text-primary),
+    var(--primary),
+    #aa0e4a,
+    var(--primary),
+    var(--text-primary)
   );
-  background-size: 400% 100%;
+  background-size: 200% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 
-  /* Animación fluida continua */
-  animation: seamlessShimmer 12s linear infinite;
-  
-  /* Sombras ambientales */
+  animation: seamlessShimmer 10s linear infinite;
+
   filter: drop-shadow(0 15px 40px rgba(255, 69, 0, 0.25))
           drop-shadow(0 0 80px rgba(255, 115, 0, 0.15));
 }
 
-/* Eje de desplazamiento sintonizado para background-size: 400%.
-  El movimiento de 0% a -200% desplaza el patrón de forma idéntica, 
-  haciendo que el reinicio del bucle sea invisible al ojo.
-*/
 @keyframes seamlessShimmer {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: -200% 50%;
-  }
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
 /* Botones con Microinteracciones Premium */
