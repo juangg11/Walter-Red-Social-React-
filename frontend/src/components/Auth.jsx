@@ -4,12 +4,11 @@ import request from '../api/client';
 import { Mail, Lock, User, X, MessageSquare, HelpCircle, ArrowRight } from 'lucide-react';
 import styles from './Auth.module.css';
 
-// Variantes de animación reutilizables para limpiar el árbol de componentes
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.15 } // Hace que los hijos aparezcan uno detrás de otro
+    transition: { staggerChildren: 0.15 }
   }
 };
 
@@ -73,7 +72,6 @@ export default function Auth({ onLogin }) {
 
   return (
     <div className={styles.landingPage}>
-      {/* Fondo de luces ambientales con pulsación suave */}
       <motion.div 
         className={styles.auroraGlow1}
         animate={{ scale: [1, 1.05, 1], opacity: [0.8, 1, 0.8] }}
@@ -126,7 +124,6 @@ export default function Auth({ onLogin }) {
         </div>
       </main>
 
-      {/* Cajón inferior de información */}
       <div className={`${styles.infoDrawer} ${activeFooterTab ? styles.infoDrawerOpen : ''}`}>
         <div className={styles.infoDrawerContent}>
           <button className={styles.closeDrawerBtn} onClick={() => setActiveFooterTab(null)}>
@@ -167,7 +164,6 @@ export default function Auth({ onLogin }) {
         <p className={styles.copyright}>&copy; {new Date().getFullYear()} Walter - Red Social.</p>
       </footer>
 
-      {/* AnimatePresence permite animar elementos cuando son desmontados (al cerrar la modal) */}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div 
