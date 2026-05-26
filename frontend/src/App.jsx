@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import Auth from './components/Auth';
 import Navbar from './components/Navbar';
 import PostModal from './components/PostModal';
@@ -20,6 +21,12 @@ const DEFAULT_SETTINGS = {
     chatToasts: true,
     desktopMessages: false,
   },
+};
+
+const pageVariants = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
+  exit: { opacity: 0, y: -12, transition: { duration: 0.2, ease: "easeIn" } }
 };
 
 function getInitialUser() {
@@ -244,33 +251,44 @@ function App() {
         onNotificationsRead={() => setNotificationCount(0)}
       />
 
-      <Routes>
-        <Route path="/" element={
-          <HomePage
-            user={user}
-            searchQuery={searchQuery}
-            selectedCommunities={selectedCommunities}
-            setSelectedCommunities={setSelectedCommunities}
-            communities={communities}
-            onPostClick={setSelectedPost}
-          />
-        } />
-        <Route path="/comunidades" element={<CommunitiesPage user={user} onCommunityCreated={loadCommunities} />} />
-        <Route path="/mensajes" element={<ChatPage user={user} />} />
-        <Route path="/u/:username" element={<UserPage user={user} onUserUpdate={handleUserUpdate} />} />
-        <Route
-          path="/settings"
-          element={
-            <SettingsPage
-              user={user}
-              settings={settings}
-              onSettingsChange={handleSettingsChange}
-              onUserUpdate={handleUserUpdate}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          variants={pageVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          className={styles.pageContainer}
+        >
+          <Routes location={location}>
+            <Route path="/" element={
+              <HomePage
+                user={user}
+                searchQuery={searchQuery}
+                selectedCommunities={selectedCommunities}
+                setSelectedCommunities={setSelectedCommunities}
+                communities={communities}
+                onPostClick={setSelectedPost}
+              />
+            } />
+            <Route path="/comunidades" element={<CommunitiesPage user={user} onCommunityCreated={loadCommunities} />} />
+            <Route path="/mensajes" element={<ChatPage user={user} />} />
+            <Route path="/u/:username" element={<UserPage user={user} onUserUpdate={handleUserUpdate} />} />
+            <Route
+              path="/settings"
+              element={
+                <SettingsPage
+                  user={user}
+                  settings={settings}
+                  onSettingsChange={handleSettingsChange}
+                  onUserUpdate={handleUserUpdate}
+                />
+              }
             />
-          }
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </motion.div>
+      </AnimatePresence>
 
       {selectedPost && (
         <PostModal
