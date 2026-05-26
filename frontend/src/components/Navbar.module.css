@@ -36,7 +36,6 @@
 .navRight {
   display: flex;
   align-items: center;
-  gap: 16px;
   justify-content: flex-end;
   flex: 1 1 auto;
   min-width: 0;
@@ -141,6 +140,7 @@
 
 .profileMenu {
   display: flex;
+  flex-direction: row-reverse; 
   align-items: center;
   gap: 10px;
   padding-left: 16px;
@@ -153,11 +153,12 @@
   font-weight: 500;
   color: var(--navbar-text);
   white-space: nowrap; 
-  flex-shrink: 0;      
+  flex-shrink: 0; 
   padding: 0;
   border: 0;
   background: none;
   cursor: pointer;
+  text-align: right; 
 }
 
 .profileMenu button {
