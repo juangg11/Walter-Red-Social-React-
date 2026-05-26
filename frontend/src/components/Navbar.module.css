@@ -6,7 +6,7 @@
   top: 0;
   z-index: 100;
   width: 100%;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02), 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 .navbarContent {
@@ -143,10 +143,10 @@
 }
 
 .profileLinkNav {
-  font-size: var(--font-size-base);
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--navbar-text);
-  max-width: 80px;
+  max-width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -154,6 +154,10 @@
   border: 0;
   background: none;
   cursor: pointer;
+}
+
+.profileLinkNav:hover {
+  color: var(--primary-hover);
 }
 
 .profileMenu button {
@@ -220,16 +224,18 @@
 /* Panel de Notificaciones */
 .notificationsPanel {
   position: fixed;
-  top: 5rem;
-  right: 1.25rem;
-  background-color: var(--bg-primary);
+  top: 68px;
+  right: 24px;
+  background-color: rgba(var(--bg-primary-rgb), 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--border-radius-md);
-  min-width: 18.75rem;
-  max-height: 25rem;
+  min-width: 320px;
+  max-height: 400px;
   overflow-y: auto;
   z-index: 10000;
-  box-shadow: var(--shadow-md);
-  border: 2px solid var(--primary-hover);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--border-light);
 }
 
 .notificationsHeader {
