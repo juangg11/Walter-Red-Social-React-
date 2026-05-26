@@ -113,7 +113,7 @@
   padding: 1rem;   
 }
 
-/* LA "W" GIGANTE - SIN SALTOS VISUALES NI LÍNEAS DURAS */
+/* LA "W" GIGANTE - PERFECCIÓN RADIAL SIN LÍNEAS NI SALTOS */
 .textLogoMark {
   font-size: clamp(14rem, 24vw, 26rem);
   font-weight: 900;
@@ -122,50 +122,47 @@
   line-height: 0.9; 
   letter-spacing: -12px;
 
-  /* Márgenes de seguridad contra mutilación de bordes */
+  /* Márgenes de seguridad contra el corte de la W */
   padding-right: 3rem; 
   padding-bottom: 2rem;
   margin-right: -3rem;
 
-  /* NUEVO DEGRADADO SIMÉTRICO: 
-    Empieza en text-primary (0%), viaja por los colores, y regresa exactamente a text-primary (100%).
-    Al expandir el tamaño a 400% horizontalmente, creamos un lienzo idóneo para un desplazamiento sin fisuras.
-  */
-  background: linear-gradient(
-    120deg,
-    var(--text-primary) 0%,
-    var(--primary) 15%,
-    #aa0e4a 30%,
-    var(--primary) 45%,
-    var(--text-primary) 50%,
-    var(--primary) 55%,
-    #aa0e4a 70%,
-    var(--primary) 85%,
+  /* SOLUCIÓN 1: Cambiamos a un degradado radial elíptico muy difuminado.
+     No contiene líneas duras ni bordes, es un flujo esférico suave. */
+  background: radial-gradient(
+    ellipse at center,
+    #ff4500 0%,
+    var(--primary) 35%,
+    #aa0e4a 65%,
     var(--text-primary) 100%
   );
-  background-size: 400% 100%;
+  background-size: 150% 150%;
+  background-position: center;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 
-  /* Animación fluida continua */
-  animation: seamlessShimmer 12s linear infinite;
+  /* SOLUCIÓN 2: Animación mediante rotación de matriz de color (hue-rotate).
+     Al ir de 0deg a 360deg, vuelve a empezar EXACTAMENTE en el mismo punto,
+     haciendo que el salto sea matemáticamente imposible de percibir. */
+  animation: liquidHueShift 8s linear infinite;
   
   /* Sombras ambientales */
   filter: drop-shadow(0 15px 40px rgba(255, 69, 0, 0.25))
           drop-shadow(0 0 80px rgba(255, 115, 0, 0.15));
 }
 
-/* Eje de desplazamiento sintonizado para background-size: 400%.
-  El movimiento de 0% a -200% desplaza el patrón de forma idéntica, 
-  haciendo que el reinicio del bucle sea invisible al ojo.
-*/
-@keyframes seamlessShimmer {
+/* El bucle circular definitivo por rotación de tono cromático */
+@keyframes liquidHueShift {
   0% {
-    background-position: 0% 50%;
+    filter: drop-shadow(0 15px 40px rgba(255, 69, 0, 0.25))
+            drop-shadow(0 0 80px rgba(255, 115, 0, 0.15))
+            hue-rotate(0deg);
   }
   100% {
-    background-position: -200% 50%;
+    filter: drop-shadow(0 15px 40px rgba(255, 69, 0, 0.25))
+            drop-shadow(0 0 80px rgba(255, 115, 0, 0.15))
+            hue-rotate(360deg);
   }
 }
 
