@@ -278,17 +278,12 @@
   font-size: 0.75rem;
 }
 
-/* ==========================================================================
-   MEDIA QUERY: Adaptación Móvil (Responsive Pro)
-   ========================================================================== */
 @media (max-width: 768px) {
-  /* Hacemos la barra superior más compacta e independiente */
   .navbarContent {
     padding: 0 12px;
     height: 52px;
   }
 
-  /* Reducimos el tamaño de la caja de búsqueda para que quepa todo arriba */
   .navSearch {
     width: 140px;
     max-width: 140px;
@@ -300,14 +295,13 @@
     font-size: 13px;
   }
 
-  /* Quitamos la línea separadora del perfil en móvil para ahorrar espacio horizontal */
   .profileMenu {
     padding-left: 0;
     border-left: none;
     gap: 8px;
   }
 
-  /* TRANSURGENCIA: Pasamos los iconos a la parte de abajo de la pantalla de forma fija */
+  /* Contenedor inferior fijo */
   .navCenterIcons {
     position: fixed;
     bottom: 0;
@@ -320,29 +314,38 @@
     border-top: 1px solid var(--navbar-border);
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
     display: flex;
-    justify-content: space-around; /* Reparte los iconos equitativamente en el ancho móvil */
+    justify-content: center;
     align-items: center;
     gap: 0;
-    padding: 0 10px;
+    padding: 0;
     pointer-events: auto;
     z-index: 101;
+  }
+
+  /* Forzamos a que todos los contenedores hijos ocupen exactamente la misma dimensión */
+  .navIconItem,
+  .notificationBellWrapper {
+    flex: 1 1 0%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
   .navIconItem {
     padding-bottom: 0;
     border-bottom: none;
-    height: 100%;
-    width: 100%;
-    justify-content: center;
   }
 
-  /* En móvil, cambiamos el indicador activo a la parte de arriba del icono inferior */
   .navIconItemActive {
     color: var(--navbar-accent) !important;
     border-top: 3px solid var(--navbar-indicator) !important;
+    border-bottom: none !important;
   }
 
-  /* Posicionamiento adaptado para el panel flotante de notificaciones en móvil */
   .notificationsPanel {
     top: auto;
     bottom: 65px;

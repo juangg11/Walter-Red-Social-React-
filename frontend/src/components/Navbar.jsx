@@ -60,11 +60,11 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
 
           <div className={styles.navCenterIcons}>
             <span
-              className={`${styles.navIconItem} ${activeTab === 'feed' ? styles.navIconItemActive : ''}`}
-              onClick={() => onTabChange?.('feed')}
-              title="Inicio"
+              className={`${styles.navIconItem} ${activeTab === 'settings' ? styles.navIconItemActive : ''}`}
+              onClick={() => onTabChange?.('settings')}
+              title="Settings"
             >
-              <Home size={20} />
+              <Settings size={20} />
             </span>
             <span
               className={`${styles.navIconItem} ${activeTab === 'communities' ? styles.navIconItemActive : ''}`}
@@ -72,6 +72,20 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
               title="Comunidades"
             >
               <Users size={20} />
+            </span>
+            <span
+              className={`${styles.navIconItem} ${activeTab === 'feed' ? styles.navIconItemActive : ''}`}
+              onClick={() => onTabChange?.('feed')}
+              title="Inicio"
+            >
+              <Home size={20} />
+            </span>
+            <span
+              className={`${styles.navIconItem} ${activeTab === 'profile' ? styles.navIconItemActive : ''}`}
+              onClick={() => onTabChange?.('profile')}
+              title="Perfil"
+            >
+              <User size={20} />
             </span>
             <span
               className={`${styles.navIconItem} ${activeTab === 'messages' ? styles.navIconItemActive : ''}`}
@@ -91,20 +105,6 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
                   {notificationCount > 9 ? '9+' : notificationCount}
                 </div>
               )}
-            </span>
-            <span
-              className={`${styles.navIconItem} ${activeTab === 'profile' ? styles.navIconItemActive : ''}`}
-              onClick={() => onTabChange?.('profile')}
-              title="Perfil"
-            >
-              <User size={20} />
-            </span>
-            <span
-              className={`${styles.navIconItem} ${activeTab === 'settings' ? styles.navIconItemActive : ''}`}
-              onClick={() => onTabChange?.('settings')}
-              title="Settings"
-            >
-              <Settings size={20} />
             </span>
           </div>
 
