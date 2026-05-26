@@ -284,6 +284,12 @@
     height: 52px;
   }
 
+  @media (max-width: 768px) {
+  main, .content-wrapper, #root { 
+    padding-bottom: 68px;
+  }
+}
+
   .navSearch {
     width: 140px;
     max-width: 140px;
@@ -301,7 +307,6 @@
     gap: 8px;
   }
 
-  /* Contenedor inferior fijo */
   .navCenterIcons {
     position: fixed;
     bottom: 0;
@@ -322,7 +327,6 @@
     z-index: 101;
   }
 
-  /* Forzamos a que todos los contenedores hijos ocupen exactamente la misma dimensión */
   .navIconItem,
   .notificationBellWrapper {
     flex: 1 1 0%;
