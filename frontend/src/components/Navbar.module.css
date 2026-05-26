@@ -34,7 +34,12 @@
 }
 
 .navRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   justify-content: flex-end;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .navLogo {
@@ -137,19 +142,18 @@
 .profileMenu {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding-left: 16px;
   border-left: 1px solid var(--border-light);
+  min-width: 0;
 }
 
 .profileLinkNav {
   font-size: var(--font-size-base);
   font-weight: 500;
   color: var(--navbar-text);
-  max-width: 80px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap; 
+  flex-shrink: 0;      
   padding: 0;
   border: 0;
   background: none;
@@ -165,6 +169,7 @@
   align-items: center;
   color: var(--navbar-icon);
   transition: color 0.2s;
+  flex-shrink: 0;
 }
 
 .profileMenu button:hover {

@@ -107,19 +107,23 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
               )}
             </span>
           </div>
-
           <div className={styles.navRight}>
             <div className={styles.profileMenu}>
+              <button type="button" className={styles.profileLinkNav} onClick={() => navigate(`/u/${user?.username}`)}>
+                {user?.username}
+              </button>
+
               {user?.avatar_url ? (
                 <img className={styles.navUserAvatar} src={addCacheBust(user.avatar_url)} alt={user.username} />
               ) : (
                 <span className={styles.navUserAvatar}>{user?.username?.slice(0, 2).toUpperCase()}</span>
               )}
-              <button type="button" className={styles.profileLinkNav} onClick={() => navigate(`/u/${user?.username}`)}>{user?.username}</button>
-              <button onClick={onLogout} title="Cerrar sesión"><LogOut size={18} /></button>
+              
+              <button onClick={onLogout} title="Cerrar sesión">
+                <LogOut size={18} />
+              </button>
             </div>
           </div>
-
         </div>
       </nav>
 
