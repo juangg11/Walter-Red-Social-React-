@@ -296,6 +296,9 @@
 .profileAboutText {
   margin: 0.75rem 0;
   white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
   font-size: 0.9rem;
   color: var(--text-secondary);
   line-height: 1.5;
