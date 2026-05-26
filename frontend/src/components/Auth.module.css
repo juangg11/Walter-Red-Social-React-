@@ -104,7 +104,7 @@
   display: inline-block;
   user-select: none;
   overflow: visible; 
-  padding: 1rem;  
+  padding: 1rem;   
 }
 
 .textLogoMark {
@@ -112,7 +112,6 @@
   font-weight: 900;
   font-family: 'Montserrat', 'Arial Black', system-ui, sans-serif;
   display: block;
-  
   line-height: 0.9; 
   letter-spacing: -12px;
 
@@ -121,11 +120,14 @@
   margin-right: -3rem;
 
   background: linear-gradient(
-    to right,
+    120deg,
     var(--text-primary) 0%,
+    var(--text-primary) 5%,
     var(--primary) 25%,
-    #aa0e4a 50%,
+    #aa0e4a 48%,
+    #aa0e4a 52%,
     var(--primary) 75%,
+    var(--text-primary) 95%,
     var(--text-primary) 100%
   );
   background-size: 200% auto;
@@ -133,7 +135,7 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
 
-  animation: unidirectionalShimmer 4s linear infinite;
+  animation: unidirectionalShimmer 7s linear infinite;
   
   filter: drop-shadow(0 15px 40px rgba(255, 69, 0, 0.25))
           drop-shadow(0 0 80px rgba(255, 115, 0, 0.15));
