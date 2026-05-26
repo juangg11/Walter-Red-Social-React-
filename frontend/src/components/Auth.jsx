@@ -60,44 +60,49 @@ export default function Auth({ onLogin }) {
 
   return (
     <div className={styles.landingPage}>
-      {/* Luces de fondo cinéticas (Efecto Aurora) */}
+      {/* Luces cinéticas de fondo */}
       <div className={styles.auroraGlow1}></div>
       <div className={styles.auroraGlow2}></div>
 
-      {/* Contenido Principal con animación de entrada escalonada */}
+      {/* Contenedor Grid Principal */}
       <main className={styles.mainContent}>
-        <div className={styles.heroSection}>
+        <div className={styles.heroGrid}>
           
-          {/* LOGO: Letra "W" con tipografía premium y animación fluida */}
-          <div className={styles.logoContainer}>
-            <span className={styles.textLogoMark}>W</span>
-            <div className={styles.logoReflection}></div>
+          {/* COLUMNA IZQUIERDA: Textos y Acciones */}
+          <div className={styles.heroLeft}>
+            <h1 className={styles.mainTitle}>Encuentra tu comunidad.</h1>
+            <p className={styles.tagline}>
+              Únete a <span className={styles.brandText}>Walter</span>, el espacio descentralizado donde las ideas fluyen libres, los hilos cobran vida y tus intereses encuentran su hogar definitivo.
+            </p>
+
+            <div className={styles.actionButtons}>
+              <button 
+                className={styles.primaryActionBtn} 
+                onClick={() => openAuthModal(true)}
+              >
+                Comenzar ahora
+                <ArrowRight size={18} className={styles.arrowIcon} />
+              </button>
+              <button 
+                className={styles.secondaryActionBtn} 
+                onClick={() => openAuthModal(false)}
+              >
+                Iniciar sesión
+              </button>
+            </div>
           </div>
 
-          <h1 className={styles.mainTitle}>Encuentra tu comunidad.</h1>
-          <p className={styles.tagline}>
-            Únete a <span className={styles.brandText}>Walter</span>, el espacio donde las ideas cobran vida, los hilos fluyen libres y tus intereses encuentran su hogar definitivo.
-          </p>
-
-          <div className={styles.actionButtons}>
-            <button 
-              className={styles.primaryActionBtn} 
-              onClick={() => openAuthModal(true)}
-            >
-              Comenzar ahora
-              <ArrowRight size={18} className={styles.arrowIcon} />
-            </button>
-            <button 
-              className={styles.secondaryActionBtn} 
-              onClick={() => openAuthModal(false)}
-            >
-              Iniciar sesión
-            </button>
+          {/* COLUMNA DERECHA: La "W" Gigante Animada en un único sentido */}
+          <div className={styles.heroRight}>
+            <div className={styles.giantLogoContainer}>
+              <span className={styles.textLogoMark}>W</span>
+            </div>
           </div>
+
         </div>
       </main>
 
-      {/* Drawer de información con transición suave */}
+      {/* Panel informativo inferior desplegable */}
       {activeFooterTab && (
         <div className={styles.infoDrawer}>
           <div className={styles.infoDrawerContent}>
@@ -120,7 +125,7 @@ export default function Auth({ onLogin }) {
         </div>
       )}
 
-      {/* Footer minimalista */}
+      {/* Footer Pro */}
       <footer className={styles.landingFooter}>
         <div className={styles.footerLinks}>
           <button 
@@ -138,10 +143,10 @@ export default function Auth({ onLogin }) {
             Contacto
           </button>
         </div>
-        <p className={styles.copyright}>&copy; {new Date().getFullYear()} Walter. Red Social Comunitario.</p>
+        <p className={styles.copyright}>&copy; {new Date().getFullYear()} Walter. Red Social Comunitaria.</p>
       </footer>
 
-      {/* MODAL DE AUTENTICACIÓN AVANZADO */}
+      {/* MODAL DE AUTENTICACIÓN */}
       {isModalOpen && (
         <div className={styles.modalOverlay} onClick={closeAuthModal}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
