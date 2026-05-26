@@ -49,11 +49,6 @@
   display: block;
   width: auto;
   height: 42px;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.navLogo:hover .navLogoMark {
-  transform: scale(1.08);
 }
 
 .navSearch {
@@ -67,7 +62,7 @@
   width: 280px;
   max-width: 280px;
   height: 34px;
-  transition: border-color 0.2s, box-shadow 0.2s, width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s;
   margin-left: 15px;
   flex-shrink: 0;
 }
@@ -89,20 +84,12 @@
 .navSearch svg {
   color: var(--navbar-icon);
   flex-shrink: 0;
-  transition: color 0.2s;
 }
 
 .navSearch:focus-within {
   border-color: var(--navbar-accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--navbar-accent) 15%, transparent);
-  width: 320px;
 }
 
-.navSearch:focus-within svg {
-  color: var(--navbar-accent);
-}
-
-/* ── Center icons ── */
 .navCenterIcons {
   position: absolute;
   left: 50%;
@@ -110,7 +97,7 @@
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 24px;
   pointer-events: none;
 }
 
@@ -120,75 +107,38 @@
 
 .navIconItem {
   cursor: pointer;
-  color: var(--navbar-icon);
+  color: inherit;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 2px;
+  transition: color 0.15s, border-color 0.15s;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  transition: background-color 0.15s, color 0.15s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-}
-
-.navIconItem:hover {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  transform: translateY(-2px);
-}
-
-.navIconItem:active {
-  transform: scale(0.9);
 }
 
 .navIconItemActive {
   color: var(--navbar-accent) !important;
-  background-color: color-mix(in srgb, var(--navbar-accent) 10%, transparent) !important;
+  border-bottom-color: var(--navbar-indicator) !important;
 }
 
-/* animated dot indicator */
-.navIconItemActive::after {
-  content: '';
-  position: absolute;
-  bottom: 3px;
-  left: 50%;
-  transform: translateX(-50%) scaleX(1);
-  width: 16px;
-  height: 3px;
-  border-radius: 2px;
-  background-color: var(--navbar-accent);
-  animation: dotIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes dotIn {
-  from { width: 0; opacity: 0; }
-  to   { width: 16px; opacity: 1; }
-}
-
-.navIconItem:not(.navIconItemActive)::after {
-  content: '';
-  position: absolute;
-  bottom: 3px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 3px;
-  border-radius: 2px;
-  background-color: var(--navbar-accent);
-  transition: width 0.2s;
-}
-
-.navCenterIcons svg {
+.navCenterIcons svg,
+.navIcons svg {
   width: 20px;
   height: 20px;
+  color: var(--navbar-icon);
+  cursor: pointer;
+  transition: color 0.2s;
 }
 
-/* ── Right ── */
+.navCenterIcons svg:hover,
+.navIcons svg:hover {
+  color: var(--primary-hover);
+}
+
 .profileMenu {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-left: 20px;
+  padding-left: 16px;
   border-left: 1px solid var(--border-light);
 }
 
@@ -200,39 +150,29 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 4px 8px;
+  padding: 0;
   border: 0;
-  border-radius: 6px;
   background: none;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
 }
 
 .profileLinkNav:hover {
   color: var(--primary-hover);
-  background-color: var(--bg-secondary);
 }
 
 .profileMenu button {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px;
+  padding: 4px;
   display: flex;
   align-items: center;
   color: var(--navbar-icon);
-  border-radius: 6px;
-  transition: background-color 0.15s, color 0.15s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: color 0.2s;
 }
 
 .profileMenu button:hover {
   color: var(--primary-hover);
-  background-color: var(--bg-secondary);
-  transform: translateY(-1px);
-}
-
-.profileMenu button:active {
-  transform: scale(0.9);
 }
 
 .profileMenu button svg {
@@ -254,157 +194,71 @@
   font-size: 0.85rem;
   border: 1.5px solid var(--border-light);
   flex-shrink: 0;
-  transition: border-color 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.navUserAvatar:hover {
-  border-color: var(--navbar-accent);
-  transform: scale(1.08);
+.notificationBadge {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  background-color: var(--primary-hover);
+  color: white;
+  border-radius: 50%;
+  width: 1.125rem;
+  height: 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 1;
 }
 
-/* ── Notification bell ── */
 .notificationBellWrapper {
   position: relative;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  color: var(--navbar-icon);
-  transition: background-color 0.15s, color 0.15s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.notificationBellWrapper:hover {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  transform: translateY(-2px);
-}
-
-.notificationBellWrapper:active {
-  transform: scale(0.9);
-}
-
-.notificationBellWrapper svg {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* bell ring when there are notifications */
-.notificationBellWrapper:has(+ * .notificationBadge) svg,
-.notificationBellActive svg {
-  animation: bellRing 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-}
-
-@keyframes bellRing {
-  0%  { transform: rotate(0); }
-  15% { transform: rotate(12deg); }
-  30% { transform: rotate(-10deg); }
-  45% { transform: rotate(8deg); }
-  60% { transform: rotate(-6deg); }
-  75% { transform: rotate(4deg); }
-  90% { transform: rotate(-2deg); }
-  100%{ transform: rotate(0); }
-}
-
-.notificationBadge {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  background-color: #aa0e4a;
-  color: white;
-  border-radius: 10px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: 700;
-  pointer-events: none;
-  border: 2px solid var(--navbar-bg);
-  line-height: 1;
-  animation: badgePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes badgePop {
-  from { transform: scale(0); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
-}
-
-/* ── Notifications panel ── */
+/* Panel de Notificaciones */
 .notificationsPanel {
   position: fixed;
-  top: 64px;
+  top: 68px;
   right: 24px;
-  background-color: var(--bg-primary);
-  border-radius: 14px;
-  width: 320px;
+  background-color: rgba(var(--bg-primary-rgb), 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--border-radius-md);
+  min-width: 320px;
   max-height: 400px;
   overflow-y: auto;
   z-index: 10000;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
   border: 1px solid var(--border-light);
-  animation: panelIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  transform-origin: top right;
-}
-
-@keyframes panelIn {
-  from { opacity: 0; transform: scale(0.94) translateY(-8px); }
-  to   { opacity: 1; transform: scale(1)    translateY(0); }
 }
 
 .notificationsHeader {
-  padding: 12px 14px;
+  padding: 0.5rem 0.75rem;
   border-bottom: 1px solid var(--border-light);
   display: flex;
   justify-content: flex-end;
-  position: sticky;
-  top: 0;
-  background-color: var(--bg-primary);
-  z-index: 1;
-  backdrop-filter: blur(8px);
 }
 
 .markAllReadBtn {
   background: none;
   border: none;
-  color: #aa0e4a;
+  color: var(--primary-hover);
   font-size: 0.75rem;
   cursor: pointer;
   font-weight: 600;
-  padding: 0;
-  transition: opacity 0.15s;
-}
-
-.markAllReadBtn:hover {
-  opacity: 0.7;
 }
 
 .notificationItem {
-  padding: 12px 14px;
+  padding: 0.75rem;
   border-bottom: 1px solid var(--border-light);
   cursor: pointer;
-  transition: background-color 0.15s, transform 0.15s;
-  animation: itemSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.notificationItem:nth-child(1) { animation-delay: 0.04s; }
-.notificationItem:nth-child(2) { animation-delay: 0.08s; }
-.notificationItem:nth-child(3) { animation-delay: 0.12s; }
-.notificationItem:nth-child(4) { animation-delay: 0.16s; }
-.notificationItem:nth-child(5) { animation-delay: 0.20s; }
-
-@keyframes itemSlideIn {
-  from { opacity: 0; transform: translateX(10px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-.notificationItem:last-child {
-  border-bottom: none;
+  transition: background-color 0.2s;
 }
 
 .notificationItem:hover {
@@ -414,20 +268,18 @@
 .notificationTitle {
   font-size: 0.8125rem;
   font-weight: 600;
-  margin: 0 0 3px 0;
+  margin-bottom: 0.25rem;
   color: var(--text-primary);
 }
 
 .notificationMsg {
   font-size: 0.75rem;
-  color: var(--text-secondary);
-  margin: 0;
-  line-height: 1.4;
+  color: var(--secondary);
 }
 
 .noNotifications {
-  padding: 2rem 1rem;
+  padding: 1.25rem;
   text-align: center;
-  color: var(--text-secondary);
-  font-size: 0.8125rem;
+  color: var(--secondary);
+  font-size: 0.75rem;
 }
