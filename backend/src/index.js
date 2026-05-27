@@ -95,7 +95,7 @@ app.use(
   swaggerUi.setup(swaggerFile)
 );
 
-app.get('/swagger.json', (_req, res) => {
+app.get('/api/swagger.json', (_req, res) => {
   res.json(swaggerFile);
 });
 
