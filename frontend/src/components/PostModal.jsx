@@ -54,10 +54,6 @@ export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated
 
       onClose?.();
 
-      onPostUpdated?.({
-        ...postData,
-        deleted: true,
-      });
     } catch (e) {
       console.error('deletePost:', e);
       alert('No se pudo borrar la publicación');
