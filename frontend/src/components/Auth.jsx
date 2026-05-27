@@ -126,7 +126,7 @@ export default function Auth({ onLogin }) {
                 Iniciar sesión
               </button>
             </motion.div>
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} className={styles.guestBtnWrapper}>
               <button className={styles.guestBtn} onClick={handleGuestLogin} disabled={loading}>
                 {loading ? 'Entrando...' : 'Iniciar como invitado'}
               </button>

@@ -460,6 +460,11 @@
   text-decoration: underline;
 }
 
+.guestBtnWrapper {
+  width: 100%;
+  text-align: center;
+}
+
 .guestBtn {
   margin-top: 1rem;
   background: none;
@@ -471,7 +476,6 @@
   padding: 0;
   transition: color 0.2s ease;
   text-decoration: none;
-  text-align: center;
 }
 
 .guestBtn:hover {
