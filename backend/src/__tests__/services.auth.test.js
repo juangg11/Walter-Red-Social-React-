@@ -28,6 +28,11 @@ describe('authService', () => {
       bcrypt.hash.mockResolvedValue(mockHash);
       jwt.sign.mockReturnValue(mockToken);
       UserModel.create.mockResolvedValue(undefined);
+      UserModel.findById.mockResolvedValue({
+        id: mockId,
+        email: 'test@example.com',
+        username: 'testuser',
+      });
 
       const result = await authService.register({
         email: 'test@example.com',

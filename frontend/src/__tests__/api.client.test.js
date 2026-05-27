@@ -159,6 +159,7 @@ describe('API Client', () => {
     let originalLocation;
 
     beforeEach(() => {
+      vi.resetModules();
       originalLocation = window.location;
       Object.defineProperty(window, 'location', {
         value: new URL('http://localhost:3000'),
