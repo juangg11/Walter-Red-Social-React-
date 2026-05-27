@@ -185,7 +185,6 @@
 }
 
 .floatingCreateBtn {
-  will-change: transform;
   position: fixed;
   bottom: 1.875rem;
   right: 1.875rem;
@@ -202,6 +201,15 @@
   box-shadow: 0 0.25rem 0.75rem rgba(237, 158, 174, 0.3);
   transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s;
   z-index: 100;
+  opacity: 0;
+  animation: showBtn 0s forwards;
+  animation-delay: 0.05s;
+}
+
+@keyframes showBtn {
+  to {
+    opacity: 1;
+  }
 }
 
 .floatingCreateBtn:hover {
