@@ -263,6 +263,7 @@ function App() {
           className={styles.pageContainer}
         >
           <Routes location={location}>
+            <Route path="/admin" element={<AdminPage />} />
             <Route path="/" element={
               <HomePage
                 user={user}
