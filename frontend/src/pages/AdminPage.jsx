@@ -78,7 +78,7 @@ export default function AdminPage() {
     setShowForm(false);
 
     try {
-      const res = await request(`/api/${resource}`);
+      const res = await request(`/${resource}`);
       setData(Array.isArray(res) ? res : res.data || []);
     } catch {
       setData([]);
