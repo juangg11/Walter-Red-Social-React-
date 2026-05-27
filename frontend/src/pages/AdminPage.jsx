@@ -2,155 +2,254 @@ import { useEffect, useMemo, useState } from "react";
 import request from "../api/client";
 import styles from "./AdminPage.module.css";
 
+// Formatea nombres de base de datos (e.g., "user_name" o "createdAt" -> "User Name")
+function formatHeader(str) {
+  if (!str) return "";
+  const spaced = str.replace(/([A-Z])/g, " $1").replace(/_/g, " ");
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1).trim();
+}
+
+function capitalize(str) {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function normalizeResource(path) {
+  return path.replace("/api/", "").split("/")[0];
+}
+
 export default function AdminPage() {
   const [schema, setSchema] = useState(null);
-  const [selectedPath, setSelectedPath] = useState(null);
-  const [selectedMethod, setSelectedMethod] = useState(null);
-  const [body, setBody] = useState("{}");
-  const [result, setResult] = useState(null);
+  const [activeResource, setActiveResource] = useState(null);
+  const [data, setData] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [form, setForm] = useState({});
   const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     async function load() {
       try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/swagger.json`);
-        const data = await res.json();
-        setSchema(data);
-      } catch (e) {
-        console.error("Swagger error:", e);
+        const json = await res.json();
+        setSchema(json);
+      } catch (error) {
+        console.error("Error cargando esquema:", error);
       } finally {
         setLoading(false);
       }
     }
-
     load();
   }, []);
 
-  const routes = useMemo(() => {
+  const resources = useMemo(() => {
     if (!schema?.paths) return [];
+    const map = new Map();
 
-    return Object.entries(schema.paths).flatMap(([path, methods]) =>
-      Object.entries(methods || {}).map(([method, info]) => ({
-        path,
-        method: method.toUpperCase(),
-        summary: info.summary,
-        description: info.description,
-        requestBody: info.requestBody,
-      }))
-    );
+    Object.entries(schema.paths).forEach(([path, methods]) => {
+      const resource = normalizeResource(path);
+      if (!resource) return;
+
+      if (!map.has(resource)) {
+        map.set(resource, {
+          name: resource,
+          endpoints: [],
+        });
+      }
+      map.get(resource).endpoints.push({ path, methods });
+    });
+
+    return Array.from(map.values());
   }, [schema]);
 
-  async function execute(route) {
+  // Extrae las cabeceras reales basadas en los datos recibidos
+  const headers = useMemo(() => {
+    if (data.length === 0) return [];
+    return Object.keys(data[0]);
+  }, [data]);
+
+  // Campos que un usuario no técnico NO debería editar manualmente
+  const systemFields = ["id", "createdAt", "updatedAt", "v", "_v", "__v"];
+
+  async function loadResource(resource) {
+    setActiveResource(resource);
+    setSelectedRow(null);
+    setForm({});
+    setShowForm(false);
+
     try {
-      let parsedBody = null;
-
-      try {
-        parsedBody = body ? JSON.parse(body) : null;
-      } catch {
-        alert("JSON inválido");
-        return;
-      }
-
-      const res = await request(route.path, {
-        method: route.method,
-        body: parsedBody ? JSON.stringify(parsedBody) : undefined,
-      });
-
-      setResult(res);
-    } catch (e) {
-      setResult({ error: e.message });
+      const res = await request(`/api/${resource}`);
+      setData(Array.isArray(res) ? res : res.data || []);
+    } catch {
+      setData([]);
     }
   }
 
-  if (loading) return <div className={styles.loading}>Cargando API...</div>;
-  if (!schema) return <div>No se pudo cargar Swagger</div>;
+  async function remove(id) {
+    if (!window.confirm("¿Estás seguro de que deseas eliminar este registro permanentemente?")) return;
+
+    try {
+      await request(`/api/${activeResource}/${id}`, {
+        method: "DELETE",
+      });
+      setData((prev) => prev.filter((x) => x.id !== id));
+    } catch (error) {
+      alert("No se pudo eliminar el registro.");
+    }
+  }
+
+  async function save(e) {
+    e.preventDefault(); // Evita recarga de página
+
+    try {
+      if (selectedRow) {
+        const res = await request(`/api/${activeResource}/${selectedRow.id}`, {
+          method: "PUT",
+          body: JSON.stringify(form),
+        });
+        setData((prev) => prev.map((x) => (x.id === selectedRow.id ? res : x)));
+      } else {
+        const res = await request(`/api/${activeResource}`, {
+          method: "POST",
+          body: JSON.stringify(form),
+        });
+        setData((prev) => [...prev, res]);
+      }
+      // Resetear estados tras guardar con éxito
+      setForm({});
+      setSelectedRow(null);
+      setShowForm(false);
+    } catch (error) {
+      alert("Ocurrió un error al guardar los cambios. Verifica los datos.");
+    }
+  }
+
+  function handleEdit(row) {
+    setSelectedRow(row);
+    setForm({ ...row });
+    setShowForm(true);
+  }
+
+  function handleCreateNew() {
+    setSelectedRow(null);
+    setForm({});
+    setShowForm(true);
+  }
+
+  if (loading) return <div className={styles.loading}>Cargando panel de administración...</div>;
 
   return (
     <div className={styles.container}>
-      {/* LEFT: TABLE */}
-      <div className={styles.leftPanel}>
-        <h2>🧩 API ADMIN PANEL</h2>
-
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Método</th>
-              <th>Ruta</th>
-              <th>Descripción</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {routes.map((r, i) => (
-              <tr
-                key={i}
-                className={`${styles.row} ${selectedPath === r.path ? styles.active : ""}`}
-              >
-                <td>
-                  <span className={`${styles.method} ${styles[r.method]}`}>
-                    {r.method}
-                  </span>
-                </td>
-
-                <td className={styles.path}>{r.path}</td>
-
-                <td>{r.summary || "Sin descripción"}</td>
-
-                <td>
-                  <button
-                    className={styles.runBtn}
-                    onClick={() => {
-                      setSelectedPath(r.path);
-                      setSelectedMethod(r.method);
-                      execute(r);
-                    }}
-                  >
-                    Ejecutar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* BARRA LATERAL (MÓDULOS) */}
+      <div className={styles.sidebar}>
+        <div className={styles.logo}>⚙️ Panel de Control</div>
+        <p className={styles.sidebarSubtitle}>Módulos editables:</p>
+        <div className={styles.menuList}>
+          {resources.map((r) => (
+            <button
+              key={r.name}
+              className={`${styles.resourceBtn} ${activeResource === r.name ? styles.active : ""}`}
+              onClick={() => loadResource(r.name)}
+            >
+              📊 {formatHeader(r.name)}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* RIGHT: EDITOR */}
-      <div className={styles.rightPanel}>
-        <h3>⚙️ Request Builder</h3>
-
-        <div className={styles.box}>
-          <div>
-            <strong>Ruta:</strong> {selectedPath || "Ninguna"}
+      {/* CONTENIDO PRINCIPAL */}
+      <div className={styles.main}>
+        {!activeResource ? (
+          <div className={styles.welcomeMessage}>
+            <h2>Bienvenido</h2>
+            <p>Por favor, selecciona una tabla en el menú de la izquierda para empezar a gestionar los datos.</p>
           </div>
+        ) : (
+          <>
+            <div className={styles.headerRow}>
+              <h2>Gestionando: {formatHeader(activeResource)}</h2>
+              <button className={styles.newBtn} onClick={handleCreateNew}>
+                ➕ Agregar Nuevo Registro
+              </button>
+            </div>
 
-          <div>
-            <strong>Método:</strong> {selectedMethod || "—"}
-          </div>
+            {data.length === 0 ? (
+              <div className={styles.noData}>No hay registros guardados en esta tabla todavía.</div>
+            ) : (
+              <div className={styles.tableWrapper}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      {headers.map((h) => (
+                        <th key={h}>{formatHeader(h)}</th>
+                      ))}
+                      <th style={{ textAlign: "center" }}>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((row) => (
+                      <tr key={row.id || Math.random()}>
+                        {/* Renderizado seguro: Garantiza que el valor va en la columna correcta */}
+                        {headers.map((headerKey) => (
+                          <td key={headerKey}>
+                            {row[headerKey] !== null && row[headerKey] !== undefined
+                              ? String(row[headerKey])
+                              : "—"}
+                          </td>
+                        ))}
+                        <td className={styles.actionCells}>
+                          <button className={styles.editBtn} onClick={() => handleEdit(row)}>
+                            ✏️ Editar
+                          </button>
+                          <button className={styles.deleteBtn} onClick={() => remove(row.id)}>
+                            🗑️ Borrar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
-          <textarea
-            className={styles.textarea}
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder='{"example": "data"}'
-          />
+            {/* FORMULARIO EDITABLE (Se muestra solo si se interactúa) */}
+            {showForm && (
+              <div className={styles.formContainer}>
+                <div className={styles.formHeader}>
+                  <h3>{selectedRow ? "📝 Modificar Registro" : "✨ Crear Nuevo Registro"}</h3>
+                  <button className={styles.closeBtn} onClick={() => setShowForm(false)}>✕</button>
+                </div>
 
-          <button
-            className={styles.primaryBtn}
-            disabled={!selectedPath}
-            onClick={() =>
-              execute({ path: selectedPath, method: selectedMethod })
-            }
-          >
-            Ejecutar manual
-          </button>
-        </div>
+                <form onSubmit={save} className={styles.adminForm}>
+                  <div className={styles.formGrid}>
+                    {headers
+                      .filter((field) => !systemFields.includes(field)) // Oculta IDs y fechas del sistema
+                      .map((field) => (
+                        <div key={field} className={styles.formGroup}>
+                          <label>{formatHeader(field)}</label>
+                          <input
+                            type="text"
+                            placeholder={`Ingresa ${formatHeader(field).toLowerCase()}...`}
+                            value={form[field] || ""}
+                            onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+                          />
+                        </div>
+                      ))}
+                  </div>
 
-        <h3>📦 Response</h3>
-
-        <pre className={styles.response}>
-          {result ? JSON.stringify(result, null, 2) : "Sin ejecución"}
-        </pre>
+                  <div className={styles.formActions}>
+                    <button type="button" className={styles.cancelBtn} onClick={() => setShowForm(false)}>
+                      Cancelar
+                    </button>
+                    <button type="submit" className={styles.saveBtn}>
+                      💾 Guardar Cambios
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
