@@ -95,6 +95,10 @@ app.use(
   swaggerUi.setup(swaggerFile)
 );
 
+app.get('/swagger.json', (_req, res) => {
+  res.json(swaggerFile);
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/comunidades', comunidadesRoutes);
 app.use('/api/publicaciones', publicacionesRoutes);
