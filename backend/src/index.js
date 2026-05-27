@@ -25,6 +25,7 @@ const app  = express();
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 const socketsByUser = new Map();
+const __dirname = path.dirname(__filename);
 
 function normalizeOrigin(origin) {
   return String(origin || '').trim().replace(/(?=(\/+))\1$/, ''); 
