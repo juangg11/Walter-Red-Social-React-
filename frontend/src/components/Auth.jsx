@@ -65,6 +65,23 @@ export default function Auth({ onLogin }) {
     setIsModalOpen(true);
   }
 
+  async function handleGuestLogin() {
+    setError('');
+    setLoading(true);
+    try {
+      const data = await request('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email: 'invitado@gmail.com', password: '123456' })
+      });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      onLogin(data.user);
+    } catch (err) {
+      setError(err.message || 'Error al iniciar como invitado');
+    }
+    setLoading(false);
+  }
+
   function closeAuthModal() {
     setIsModalOpen(false);
     setError('');
@@ -108,8 +125,10 @@ export default function Auth({ onLogin }) {
               <button className={styles.secondaryActionBtn} onClick={() => openAuthModal(false)}>
                 Iniciar sesión
               </button>
-              <button className={styles.guestBtn} onClick={() => openAuthModal(false)}>
-                Iniciar como invitado
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <button className={styles.guestBtn} onClick={handleGuestLogin} disabled={loading}>
+                {loading ? 'Entrando...' : 'Iniciar como invitado'}
               </button>
             </motion.div>
           </motion.div>
