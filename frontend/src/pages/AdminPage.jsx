@@ -1,145 +1,157 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import request from "../api/client";
+import styles from "./AdminPage.module.css";
 
 export default function AdminPage() {
   const [schema, setSchema] = useState(null);
-  const [selected, setSelected] = useState(null);
+  const [selectedPath, setSelectedPath] = useState(null);
+  const [selectedMethod, setSelectedMethod] = useState(null);
+  const [body, setBody] = useState("{}");
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/swagger.json`)
-      .then(r => r.json())
-      .then(setSchema)
-      .catch(err => console.error("Swagger error:", err));
+    async function load() {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/swagger.json`);
+        const data = await res.json();
+        setSchema(data);
+      } catch (e) {
+        console.error("Swagger error:", e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    load();
   }, []);
 
-  if (!schema) return <div style={{ padding: 20 }}>Cargando API...</div>;
+  const routes = useMemo(() => {
+    if (!schema?.paths) return [];
 
-  return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif" }}>
-      
-      {/* SIDEBAR */}
-      <div style={{ width: 320, overflowY: "auto", borderRight: "1px solid #ddd", padding: 10 }}>
-        <h3>Admin API</h3>
-
-        {Object.entries(schema.paths).map(([path, methods]) => (
-          <div key={path} style={{ marginBottom: 10 }}>
-            <div style={{ fontWeight: "bold" }}>{path}</div>
-
-            {Object.keys(methods).map(method => (
-              <button
-                key={method}
-                onClick={() => setSelected({ path, method })}
-                style={{
-                  display: "block",
-                  marginLeft: 10,
-                  marginTop: 4,
-                  cursor: "pointer"
-                }}
-              >
-                {method.toUpperCase()}
-              </button>
-            ))}
-          </div>
-        ))}
-      </div>
-
-      {/* MAIN */}
-      <div style={{ flex: 1, padding: 20 }}>
-        {!selected ? (
-          <h2>Selecciona un endpoint</h2>
-        ) : (
-          <EndpointPanel
-            schema={schema}
-            path={selected.path}
-            method={selected.method}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-
-/* ========================= */
-/* ENDPOINT PANEL           */
-/* ========================= */
-
-function EndpointPanel({ schema, path, method }) {
-  const endpoint = schema.paths[path][method];
-  const [form, setForm] = useState({});
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const params = endpoint.parameters || [];
-
-  async function execute() {
-    setLoading(true);
-    setResult(null);
-
-    try {
-      let url = path;
-
-      // PATH PARAMS
-      params.forEach(p => {
-        if (p.in === "path") {
-          url = url.replace(`{${p.name}}`, form[p.name] || "");
-        }
-      });
-
-      // QUERY PARAMS
-      const query = params
-        .filter(p => p.in === "query")
-        .map(p => `${p.name}=${form[p.name] || ""}`)
-        .join("&");
-
-      if (query) url += `?${query}`;
-
-      const res = await request(url, {
+    return Object.entries(schema.paths).flatMap(([path, methods]) =>
+      Object.entries(methods || {}).map(([method, info]) => ({
+        path,
         method: method.toUpperCase(),
-        body:
-          method !== "get"
-            ? JSON.stringify(form)
-            : undefined,
+        summary: info.summary,
+        description: info.description,
+        requestBody: info.requestBody,
+      }))
+    );
+  }, [schema]);
+
+  async function execute(route) {
+    try {
+      let parsedBody = null;
+
+      try {
+        parsedBody = body ? JSON.parse(body) : null;
+      } catch {
+        alert("JSON inválido");
+        return;
+      }
+
+      const res = await request(route.path, {
+        method: route.method,
+        body: parsedBody ? JSON.stringify(parsedBody) : undefined,
       });
 
       setResult(res);
     } catch (e) {
       setResult({ error: e.message });
-    } finally {
-      setLoading(false);
     }
   }
 
+  if (loading) return <div className={styles.loading}>Cargando API...</div>;
+  if (!schema) return <div>No se pudo cargar Swagger</div>;
+
   return (
-    <div>
-      <h2>{method.toUpperCase()} {path}</h2>
+    <div className={styles.container}>
+      {/* LEFT: TABLE */}
+      <div className={styles.leftPanel}>
+        <h2>🧩 API ADMIN PANEL</h2>
 
-      {/* PARAMS */}
-      {params.map(p => (
-        <div key={p.name} style={{ marginBottom: 10 }}>
-          <label>{p.name}</label>
-          <input
-            style={{ marginLeft: 10 }}
-            placeholder={p.description}
-            onChange={e =>
-              setForm({ ...form, [p.name]: e.target.value })
-            }
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Método</th>
+              <th>Ruta</th>
+              <th>Descripción</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {routes.map((r, i) => (
+              <tr
+                key={i}
+                className={`${styles.row} ${selectedPath === r.path ? styles.active : ""}`}
+              >
+                <td>
+                  <span className={`${styles.method} ${styles[r.method]}`}>
+                    {r.method}
+                  </span>
+                </td>
+
+                <td className={styles.path}>{r.path}</td>
+
+                <td>{r.summary || "Sin descripción"}</td>
+
+                <td>
+                  <button
+                    className={styles.runBtn}
+                    onClick={() => {
+                      setSelectedPath(r.path);
+                      setSelectedMethod(r.method);
+                      execute(r);
+                    }}
+                  >
+                    Ejecutar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* RIGHT: EDITOR */}
+      <div className={styles.rightPanel}>
+        <h3>⚙️ Request Builder</h3>
+
+        <div className={styles.box}>
+          <div>
+            <strong>Ruta:</strong> {selectedPath || "Ninguna"}
+          </div>
+
+          <div>
+            <strong>Método:</strong> {selectedMethod || "—"}
+          </div>
+
+          <textarea
+            className={styles.textarea}
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder='{"example": "data"}'
           />
+
+          <button
+            className={styles.primaryBtn}
+            disabled={!selectedPath}
+            onClick={() =>
+              execute({ path: selectedPath, method: selectedMethod })
+            }
+          >
+            Ejecutar manual
+          </button>
         </div>
-      ))}
 
-      <button onClick={execute} disabled={loading} style={{ marginTop: 10 }}>
-        {loading ? "Ejecutando..." : "Ejecutar"}
-      </button>
+        <h3>📦 Response</h3>
 
-      <pre style={{
-        marginTop: 20,
-        background: "#111",
-        color: "#0f0",
-        padding: 10,
-        overflow: "auto"
-      }}>
-        {JSON.stringify(result, null, 2)}
-      </pre>
+        <pre className={styles.response}>
+          {result ? JSON.stringify(result, null, 2) : "Sin ejecución"}
+        </pre>
+      </div>
     </div>
   );
 }
