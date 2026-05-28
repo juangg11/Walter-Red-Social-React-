@@ -73,6 +73,7 @@ export const CommentModel = {
       `SELECT c.*, u.username, u.avatar_url
        FROM comentarios c
        LEFT JOIN users u ON u.id = c.usuario_id
+       GROUP BY c.id, u.username, u.avatar_url
        ORDER BY c.fecha_creacion DESC`
     );
     return rows;
