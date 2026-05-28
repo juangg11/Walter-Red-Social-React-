@@ -43,4 +43,8 @@ export const comentariosService = {
     await CommentModel.delete(id);
     await CommentModel.decrementPostCommentCount(comment.publicacion_id);
   },
+
+  async getAll() {
+    return CommentModel.findAllWithUser();
+  }
 };

@@ -67,4 +67,14 @@ export const CommentModel = {
       [publicacionId]
     );
   },
+
+  async findAllWithUser() {
+    const [rows] = await pool.query(
+      `SELECT c.*, u.username, u.avatar_url
+       FROM comentarios c
+       LEFT JOIN users u ON u.id = c.usuario_id
+       ORDER BY c.fecha_creacion DESC`
+    );
+    return rows;
+  }
 };
