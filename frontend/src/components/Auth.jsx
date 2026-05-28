@@ -17,20 +17,12 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
 };
 
-/**
- * Validates that a token conforms to the expected JWT format
- * before it is persisted to browser storage (S8475).
- */
 function validateToken(token) {
   if (typeof token !== 'string') return null;
   const jwtPattern = /^[a-zA-Z0-9\-_=]+\.[a-zA-Z0-9\-_=]+\.[a-zA-Z0-9\-_=]+$/;
   return jwtPattern.test(token) ? token : null;
 }
 
-/**
- * Sanitises a user object received from the server so that no
- * tainted string values are written straight to localStorage (S8475).
- */
 function sanitizeUserForStorage(userObj) {
   if (!userObj || typeof userObj !== 'object') return null;
 
@@ -53,10 +45,6 @@ function sanitizeUserForStorage(userObj) {
   };
 }
 
-/**
- * Persists auth credentials to localStorage after sanitisation.
- * Returns the sanitised user object so callers can pass it upstream.
- */
 function persistAuthData(data) {
   const safeToken = validateToken(data.token);
   if (!safeToken) throw new Error('Token con formato no válido');
@@ -64,8 +52,8 @@ function persistAuthData(data) {
   const safeUser = sanitizeUserForStorage(data.user);
   if (!safeUser) throw new Error('Datos de usuario no válidos');
 
-  localStorage.setItem('token', safeToken);          // sanitised ✔
-  localStorage.setItem('user', JSON.stringify(safeUser)); // sanitised ✔
+  localStorage.setItem('token', safeToken);
+  localStorage.setItem('user', JSON.stringify(safeUser));
   return safeUser;
 }
 
