@@ -10,12 +10,11 @@ export const comentariosController = {
   },
 
   async getByPublicacion(req, res) {
-    const { publicacion_id } = listComentariosDto(req.query);
-    
-    if (!publicacion_id) {
+    if (!req.query || !req.query.publicacion_id) {
       return comentariosController.getAll(req, res);
     }
-    
+
+    const { publicacion_id } = listComentariosDto(req.query);    
     const data = await comentariosService.getByPublicacion(publicacion_id);
     return res.json(data);
   },
