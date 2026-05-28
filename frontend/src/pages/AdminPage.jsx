@@ -1,5 +1,32 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { 
+  User, 
+  Package, 
+  ShoppingCart, 
+  FolderTree, 
+  Key, 
+  Settings, 
+  BarChart3, 
+  Receipt, 
+  Building2, 
+  CreditCard, 
+  ClipboardList, 
+  Folder, 
+  Check, 
+  X, 
+  Info, 
+  AlertTriangle, 
+  Search, 
+  ChevronLeft, 
+  ChevronRight, 
+  Lock, 
+  Save, 
+  Sparkles, 
+  Trash2, 
+  Zap, 
+  Download 
+} from "lucide-react";
 import request from "../api/client";
 import styles from "./AdminPage.module.css";
 
@@ -21,9 +48,18 @@ function formatValue(val) {
 }
 
 const RESOURCE_ICONS = {
-  users: "👤", products: "📦", orders: "🛒", categories: "🗂️",
-  roles: "🔑", settings: "⚙️", reports: "📊", invoices: "🧾",
-  clients: "🏢", payments: "💳", logs: "📋", default: "📁"
+  users: <User size={18} />, 
+  products: <Package size={18} />, 
+  orders: <ShoppingCart size={18} />, 
+  categories: <FolderTree size={18} />,
+  roles: <Key size={18} />, 
+  settings: <Settings size={18} />, 
+  reports: <BarChart3 size={18} />, 
+  invoices: <Receipt size={18} />,
+  clients: <Building2 size={18} />, 
+  payments: <CreditCard size={18} />, 
+  logs: <ClipboardList size={18} />, 
+  default: <Folder size={18} />
 };
 function getIcon(name) {
   return RESOURCE_ICONS[name?.toLowerCase()] || RESOURCE_ICONS.default;
@@ -72,7 +108,9 @@ function Toast({ toasts }) {
               color: t.type === "success" ? "#4ade80" : t.type === "error" ? "#f87171" : "#a5b4fc",
               border: `1px solid ${t.type === "success" ? "#166534" : t.type === "error" ? "#7f1d1d" : "#312e81"}`
             }}>
-            <span className={styles.toastIcon}>{t.type === "success" ? "✓" : t.type === "error" ? "✕" : "ℹ"}</span>
+            <span className={styles.toastIcon}>
+              {t.type === "success" ? <Check size={16} /> : t.type === "error" ? <X size={16} /> : <Info size={16} />}
+            </span>
             {t.message}
           </motion.div>
         ))}
@@ -93,7 +131,7 @@ function ConfirmModal({ open, message, onConfirm, onCancel }) {
             animate={{ opacity: 1, scale: 1, y: 0, transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] } }}
             exit={{ opacity: 0, scale: 0.92, y: -10, transition: { duration: 0.18 } }}
             className={styles.modalContent}>
-            <div className={styles.modalIcon}>⚠️</div>
+            <div className={styles.modalIcon}><AlertTriangle size={28} /></div>
             <h3 className={styles.modalTitle}>Confirmar acción</h3>
             <p className={styles.modalText}>{message}</p>
             <div className={styles.modalActions}>
@@ -128,7 +166,7 @@ function StatCard({ label, value, icon, color = "#4f46e5", delay = 0 }) {
 function SearchBar({ value, onChange, placeholder }) {
   return (
     <div className={styles.searchContainer}>
-      <span className={styles.searchIcon}>🔍</span>
+      <span className={styles.searchIcon}><Search size={18} /></span>
       <input
         type="text"
         value={value}
@@ -156,7 +194,7 @@ function Pagination({ page, total, perPage, onChange }) {
   return (
     <div className={styles.paginationContainer}>
       <button onClick={() => onChange(page - 1)} disabled={page === 1}
-        className={styles.paginBtn} style={{ opacity: page === 1 ? 0.35 : 1 }}>←</button>
+        className={styles.paginBtn} style={{ opacity: page === 1 ? 0.35 : 1 }}><ChevronLeft size={16} /></button>
       {pages.map((p, i) => (
         <button key={i} onClick={() => p !== "…" && onChange(p)}
           className={`${styles.paginBtn} ${p === page ? styles.paginActive : ""}`} style={{ cursor: p === "…" ? "default" : "pointer" }}>
@@ -164,7 +202,7 @@ function Pagination({ page, total, perPage, onChange }) {
         </button>
       ))}
       <button onClick={() => onChange(page + 1)} disabled={page === totalPages}
-        className={styles.paginBtn} style={{ opacity: page === totalPages ? 0.35 : 1 }}>→</button>
+        className={styles.paginBtn} style={{ opacity: page === totalPages ? 0.35 : 1 }}><ChevronRight size={16} /></button>
       <span className={styles.paginationInfo}>
         {((page - 1) * perPage) + 1}–{Math.min(page * perPage, total)} de {total}
       </span>
@@ -191,7 +229,6 @@ function DrawerForm({ open, selectedRow, headers, form, setForm, onSave, onClose
             onClick={onClose} className={styles.drawerOverlay} />
           <motion.div variants={drawerVariant} initial="initial" animate="animate" exit="exit"
             className={styles.drawerPanel}>
-            {/* Drawer header */}
             <div className={styles.drawerHeader}>
               <div>
                 <div className={styles.drawerSubtitle}>
@@ -203,15 +240,14 @@ function DrawerForm({ open, selectedRow, headers, form, setForm, onSave, onClose
               </div>
               <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
                 onClick={onClose} className={styles.drawerCloseBtn}>
-                ✕
+                <X size={18} />
               </motion.button>
             </div>
 
-            {/* Drawer body */}
             <form onSubmit={handleSave} className={styles.drawerBody}>
               {selectedRow && (
-                <div className={styles.drawerIdBanner}>
-                  🔒 ID: <span className={styles.drawerIdSpan}>{selectedRow.id}</span>
+                <div className={styles.drawerIdBanner} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <Lock size={14} /> ID: <span className={styles.drawerIdSpan}>{selectedRow.id}</span>
                 </div>
               )}
               {editableHeaders.map((field, i) => (
@@ -252,7 +288,9 @@ function DrawerForm({ open, selectedRow, headers, form, setForm, onSave, onClose
                   {saving ? (
                     <><LoadingDots />Guardando…</>
                   ) : (
-                    <>{selectedRow ? "💾 Guardar cambios" : "✨ Crear registro"}</>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                      {selectedRow ? <><Save size={16} /> Guardar cambios</> : <><Sparkles size={16} /> Crear registro</>}
+                    </div>
                   )}
                 </motion.button>
               </div>
@@ -292,8 +330,8 @@ function BulkActionsBar({ selected, total, onDeleteAll, onClearSelection }) {
           <button onClick={onClearSelection} className={`${styles.cancelBtn} ${styles.bulkCancelBtn}`}>
             Deseleccionar
           </button>
-          <button onClick={onDeleteAll} className={styles.bulkDeleteBtn}>
-            🗑️ Eliminar selección
+          <button onClick={onDeleteAll} className={styles.bulkDeleteBtn} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <Trash2 size={16} /> Eliminar selección
           </button>
         </motion.div>
       )}
@@ -481,7 +519,7 @@ export default function AdminPage() {
         className={styles.sidebar}>
 
         <div className={styles.sidebarLogoContainer} style={{ padding: sidebarCollapsed ? "18px 0" : "22px 20px 16px", justifyContent: sidebarCollapsed ? "center" : "flex-start" }}>
-          <motion.div whileHover={{ rotate: 20 }} className={styles.logoIcon}>⚡</motion.div>
+          <motion.div whileHover={{ rotate: 20 }} className={styles.logoIcon} style={{ display: "flex", alignItems: "center" }}><Zap size={20} /></motion.div>
           <AnimatePresence>
             {!sidebarCollapsed && (
               <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0, transition: { delay: 0.05 } }} exit={{ opacity: 0, x: -10 }}>
@@ -515,7 +553,7 @@ export default function AdminPage() {
                 color: activeResource === r.name ? "#a5b4fc" : "#6b7280",
                 boxShadow: activeResource === r.name ? "inset 0 0 0 1px rgba(99,102,241,0.3)" : "none"
               }}>
-              <span className={styles.resourceIcon}>{getIcon(r.name)}</span>
+              <span className={styles.resourceIcon} style={{ display: "flex", alignItems: "center" }}>{getIcon(r.name)}</span>
               <AnimatePresence>
                 {!sidebarCollapsed && (
                   <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { delay: 0.1 } }} exit={{ opacity: 0 }}
@@ -535,8 +573,9 @@ export default function AdminPage() {
         <div className={styles.collapseContainer}>
           <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={() => setSidebarCollapsed(p => !p)}
-            className={styles.collapseBtn}>
-            {sidebarCollapsed ? "→" : "← Colapsar"}
+            className={styles.collapseBtn}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+            {sidebarCollapsed ? <ChevronRight size={16} /> : <><ChevronLeft size={16} /> Colapsar</>}
           </motion.button>
         </div>
       </motion.aside>
@@ -548,7 +587,7 @@ export default function AdminPage() {
             <AnimatePresence mode="wait">
               {activeResource ? (
                 <motion.div key={activeResource} initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}>
-                  <div className={styles.topbarTitle}>
+                  <div className={styles.topbarTitle} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     {getIcon(activeResource)} {formatHeader(activeResource)}
                   </div>
                   <div className={styles.topbarSubtitle}>
@@ -566,15 +605,13 @@ export default function AdminPage() {
           <div className={styles.avatar}>A</div>
         </div>
 
-        {/* Content */}
         <div className={styles.contentWrapper}>
           <AnimatePresence mode="wait">
             {!activeResource ? (
-              /* Welcome */
               <motion.div key="welcome" variants={fadeSlideIn} initial="initial" animate="animate" exit="exit">
                 <div className={styles.welcomeHeader}>
                   <h2 className={styles.welcomeTitle}>
-                    Bienvenido al panel 👋
+                    Bienvenido al panel
                   </h2>
                   <p className={styles.welcomeSubtitle}>
                     Selecciona un módulo en la barra lateral para gestionar tus datos.
@@ -597,11 +634,14 @@ export default function AdminPage() {
               </motion.div>
             ) : (
               <motion.div key={activeResource} variants={fadeSlideIn} initial="initial" animate="animate" exit="exit">
-                {/* [Bloque de cierre estructural añadido para completar el archivo de forma funcional] */}
                 <div style={{ display: "flex", gap: 14, marginBottom: 20 }}>
                   <SearchBar value={search} onChange={setSearch} placeholder="Buscar..." />
-                  <button onClick={handleCreateNew} className={styles.saveBtn}>✨ Nuevo</button>
-                  <button onClick={exportCSV} className={styles.cancelBtn}>📥 Exportar CSV</button>
+                  <button onClick={handleCreateNew} className={styles.saveBtn} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <Sparkles size={16} /> Nuevo
+                  </button>
+                  <button onClick={exportCSV} className={styles.cancelBtn} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <Download size={16} /> Exportar CSV
+                  </button>
                 </div>
 
                 <BulkActionsBar selected={selectedIds} total={filtered.length} onDeleteAll={bulkDelete} onClearSelection={() => setSelectedIds([])} />
