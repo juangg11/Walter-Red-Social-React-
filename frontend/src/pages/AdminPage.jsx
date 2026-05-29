@@ -524,7 +524,7 @@ export default function AdminPage() {
             {!sidebarCollapsed && (
               <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0, transition: { delay: 0.05 } }} exit={{ opacity: 0, x: -10 }}>
                 <div className={styles.logoTitle}>AdminPanel</div>
-                <div className={styles.logoSubtitle}>ENTERPRISE</div>
+                <div className={styles.logoSubtitle}>WALTER</div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -562,10 +562,6 @@ export default function AdminPage() {
                   </motion.span>
                 )}
               </AnimatePresence>
-              {activeResource === r.name && (
-                <motion.div layoutId="activeIndicator"
-                  className={styles.activeIndicator} style={{ left: sidebarCollapsed ? 4 : 0 }} />
-              )}
             </motion.button>
           ))}
         </div>
@@ -597,7 +593,6 @@ export default function AdminPage() {
               ) : (
                 <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <div className={styles.topbarTitle}>Panel de Administración</div>
-                  <div className={styles.topbarSubtitle}>Selecciona un módulo para comenzar</div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -610,9 +605,6 @@ export default function AdminPage() {
             {!activeResource ? (
               <motion.div key="welcome" variants={fadeSlideIn} initial="initial" animate="animate" exit="exit">
                 <div className={styles.welcomeHeader}>
-                  <h2 className={styles.welcomeTitle}>
-                    Bienvenido al panel
-                  </h2>
                   <p className={styles.welcomeSubtitle}>
                     Selecciona un módulo en la barra lateral para gestionar tus datos.
                   </p>
