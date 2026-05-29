@@ -6,7 +6,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 const router = Router();
 
 router.get('/me', authMiddleware, asyncHandler(usuariosController.me));
-router.get('/is-admin', authMiddleware, asyncHandler(usuariosController.isAdmin));
+router.get('/isAdmin', authMiddleware, asyncHandler(usuariosController.isAdmin));
 router.patch('/perfil', authMiddleware, asyncHandler(usuariosController.updatePerfil));
 router.get('/perfil/:username', authMiddleware, asyncHandler(usuariosController.getProfile));
 router.get('/perfil/:username/publicaciones', authMiddleware, asyncHandler(usuariosController.getPublicaciones));

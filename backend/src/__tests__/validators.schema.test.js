@@ -207,4 +207,3 @@ describe('requiredUrl', () => {
     expect(() => requiredUrl(body, 'url', 'URL')).toThrow(AppError);
   });
 });
-
