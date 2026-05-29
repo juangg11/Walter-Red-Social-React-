@@ -617,7 +617,6 @@ export default function AdminPage() {
                       whileTap={{ scale: 0.97 }}
                       onClick={() => loadResource(r.name)}
                       className={styles.moduleCard}>
-                      <div className={styles.moduleCardIcon}>{getIcon(r.name)}</div>
                       <div className={styles.moduleCardTitle}>{formatHeader(r.name)}</div>
                       <div className={styles.moduleCardMeta}>{r.endpoints.length} endpoints</div>
                     </motion.button>

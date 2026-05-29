@@ -461,16 +461,6 @@
   white-space: nowrap;
 }
 
-.activeIndicator {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 20px;
-  border-radius: 2px;
-  background-color: #4f46e5;
-}
-
 .collapseContainer {
   padding: 14px 10px;
   border-top: 1px solid #1f2937;
@@ -571,11 +561,6 @@
   cursor: pointer;
   text-align: left;
   transition: border 0.2s;
-}
-
-.moduleCardIcon {
-  font-size: 28px;
-  margin-bottom: 10px;
 }
 
 .moduleCardTitle {
