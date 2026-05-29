@@ -140,10 +140,10 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
           </div>
 
           <div className={styles.navRight}>
-            <button className={styles.profileLinkNav} onClick={() => navigate('/admin')}>
-              Panel de administración
-            </button>
             <div className={styles.profileMenu}>
+              <button className={styles.profileLinkNav} onClick={() => navigate('/admin')}>
+                Panel de administración
+              </button>
               {user?.avatar_url ? (
                 <img className={styles.navUserAvatar} src={addCacheBust(user.avatar_url)} alt={user.username} />
               ) : (
