@@ -12,6 +12,10 @@ export const usuariosService = {
     return user;
   },
 
+  async isAdmin(userId) {
+    return UserModel.isAdmin(userId);
+  },
+
   async getPublicaciones(username, viewerId = null) {
     const user = await this.getByUsername(username);
     return PostModel.findByUserId(user.id, viewerId);

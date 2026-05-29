@@ -8,6 +8,11 @@ export const usuariosController = {
     res.json(data);
   },
 
+  async isAdmin(req, res) {
+    const data = await usuariosService.isAdmin(req.user.id);
+    res.json(data);
+  },
+
   async getProfile(req, res) {
     const { username } = usernameParamDto(req.params);
     const data = await usuariosService.getProfile(username, req.user?.id || null);

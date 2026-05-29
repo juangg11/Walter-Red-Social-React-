@@ -6,6 +6,11 @@ export const UserModel = {
     return rows;
   },
 
+  async isAdmin(userId) {
+    const [rows] = await pool.query('SELECT is_admin FROM users WHERE id = ?', [userId]);
+    return rows.length > 0 && rows[0].is_admin === 1;
+  },
+
   async findByEmail(email) {
     const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
     return rows[0] || null;

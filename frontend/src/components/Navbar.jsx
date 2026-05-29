@@ -10,6 +10,16 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
   const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(user?.isAdmin || false);
+
+  async function checkAdminStatus() {
+    try {
+      const data = await request('/usuarios/isAdmin');
+      setIsAdmin(data);
+    } catch (e) {
+      console.error('checkAdminStatus:', e);
+    }
+  }
 
   async function handleNotificationsClick() {
     if (showNotifications) {
@@ -141,9 +151,12 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
 
           <div className={styles.navRight}>
             <div className={styles.profileMenu}>
-              <button className={styles.profileLinkNav} onClick={() => navigate('/admin')}>
-                Panel de administración
-              </button>
+              {user?.isAdmin ? (
+                <button className={styles.profileLinkNav} onClick={() => navigate('/admin')}>
+                  Panel de administración
+                </button>
+              ) : (<></>)}
+
               {user?.avatar_url ? (
                 <img className={styles.navUserAvatar} src={addCacheBust(user.avatar_url)} alt={user.username} />
               ) : (
