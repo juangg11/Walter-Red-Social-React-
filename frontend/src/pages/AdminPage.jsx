@@ -606,7 +606,7 @@ export default function AdminPage() {
               <motion.div key="welcome" variants={fadeSlideIn} initial="initial" animate="animate" exit="exit">
                 <div className={styles.welcomeHeader}>
                   <p className={styles.welcomeSubtitle}>
-                    Selecciona un módulo en la barra lateral para gestionar tus datos.
+                    Selecciona un módulo para gestionar tus datos.
                   </p>
                 </div>
                 <motion.div variants={staggerContainer} initial="initial" animate="animate"

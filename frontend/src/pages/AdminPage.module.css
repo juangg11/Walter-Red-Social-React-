@@ -1,5 +1,6 @@
 .pageStyle {
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background-color: #080f1e;
   color: #e5e7eb;
 }
@@ -480,11 +481,12 @@
 
 .mainContainer {
   flex: 1;
-  overflow: auto;
   display: flex;
   flex-direction: column;
   min-width: 0;
-}
+  min-height: 0;
+  overflow: hidden;
+}s
 
 .topbar {
   padding: 16px 28px;
@@ -525,8 +527,10 @@
 }
 
 .contentWrapper {
-  padding: 28px;
   flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 16px;
 }
 
 .welcomeHeader {
