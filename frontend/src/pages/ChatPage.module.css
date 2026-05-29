@@ -90,6 +90,9 @@
   white-space: nowrap;
 }
 
+.avatarSmall,
+.chatHeaderAvatar,
+.messageAvatar,
 .chatAvatar {
   width: 2.25rem;
   height: 2.25rem;
@@ -101,6 +104,20 @@
   background: var(--bg-tertiary);
   color: var(--primary-hover);
   font-weight: 700;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.chatHeaderAvatar {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.messageAvatar {
+  width: 1.9rem;
+  height: 1.9rem;
+  align-self: flex-end;
+  margin-right: 0.45rem;
 }
 
 .chatPanel {

@@ -69,6 +69,12 @@ export default function UserPage({ user, onUserUpdate }) {
     setSharedPosts(cur => cur.map(p => p.id === updatedPost.id ? updatedPost : p));
   }
 
+  function handlePostDeleted(postId) {
+    setPosts(cur => cur.filter(p => String(p.id) !== String(postId)));
+    setSharedPosts(cur => cur.filter(p => String(p.id) !== String(postId)));
+    setSelectedPost(null);
+  }
+
   async function handleVote(postId, voteType) {
     const post = [...posts, ...sharedPosts].find(item => item.id === postId);
     if (!post) return;
@@ -306,6 +312,7 @@ export default function UserPage({ user, onUserUpdate }) {
           user={user}
           onClose={() => setSelectedPost(null)}
           onPostUpdated={updatePost}
+          onPostDeleted={handlePostDeleted}
           onAuthorClick={handleUsernameClick}
           onShare={handleShare}
         />

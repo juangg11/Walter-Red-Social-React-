@@ -9,13 +9,14 @@ function formatCommunityName(name) {
   return String(name).replace(/^w\//i, '');
 }
 
-export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated, onAuthorClick = null, onShare = null }) {
+export default function PostModal({ post, user, onClose, onCommentAdded, onPostUpdated, onPostDeleted, onAuthorClick = null, onShare = null }) {
   const [postData, setPostData] = useState(post);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [userVote, setUserVote] = useState(post.voto_usuario ?? null);
+  const isPostOwner = String(postData?.usuario_id ?? '') === String(user?.id ?? '');
 
   useEffect(() => {
     setPostData(post);
@@ -52,6 +53,7 @@ export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated
         method: 'DELETE',
       });
 
+      onPostDeleted?.(post.id);
       onClose?.();
 
     } catch (e) {
@@ -110,6 +112,34 @@ export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated
     }
   }
 
+  async function handleCommentDeleted(commentId) {
+    try {
+      const data = await request(`/comentarios/${commentId}`, { method: 'DELETE' });
+      setComments(current => {
+        const removeIds = new Set([String(commentId)]);
+        let changed = true;
+        while (changed) {
+          changed = false;
+          current.forEach(comment => {
+            if (comment.comentario_padre_id && removeIds.has(String(comment.comentario_padre_id)) && !removeIds.has(String(comment.id))) {
+              removeIds.add(String(comment.id));
+              changed = true;
+            }
+          });
+        }
+        return current.filter(comment => !removeIds.has(String(comment.id)));
+      });
+      const count = Number(data.numero_comentarios ?? Math.max((postData.numero_comentarios ?? comments.length) - 1, 0));
+      const updated = { ...postData, numero_comentarios: count };
+      setPostData(updated);
+      onCommentAdded?.(count);
+      onPostUpdated?.(updated);
+    } catch (e) {
+      console.error('deleteComment:', e);
+      alert('No se pudo borrar el comentario');
+    }
+  }
+
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
@@ -155,10 +185,12 @@ export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated
             <Repeat2 size={18} />
             <span>{postData?.compartido_por_usuario ? 'Compartido' : 'Compartir'}</span>
           </button>
-          <button className={`${styles.modalDeleteBtn}`} onClick={handleDeleteClick}>
-            <Trash2 size={18} />
-            <span>Borrar</span>
-          </button>
+          {isPostOwner && (
+            <button className={`${styles.modalDeleteBtn}`} onClick={handleDeleteClick}>
+              <Trash2 size={18} />
+              <span>Borrar</span>
+            </button>
+          )}
         </div>
         {/* Comentarios */}
         <div className={styles.commentsSection}>
@@ -181,7 +213,12 @@ export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated
             ) : comments.length === 0 ? (
               <div className={styles.noComments}>Sin comentarios aún</div>
             ) : (
-              <CommentTree comments={comments} onReply={addComment} />
+              <CommentTree
+                comments={comments}
+                user={user}
+                onReply={addComment}
+                onDelete={handleCommentDeleted}
+              />
             )}
           </div>
         </div>
@@ -190,7 +227,7 @@ export default function PostModal({ post, onClose, onCommentAdded, onPostUpdated
   );
 }
 
-function CommentTree({ comments, onReply }) {
+function CommentTree({ comments, user, onReply, onDelete }) {
   const roots = comments.filter(c => !c.comentario_padre_id);
   const repliesByParent = comments.reduce((acc, comment) => {
     if (comment.comentario_padre_id) {
@@ -205,15 +242,18 @@ function CommentTree({ comments, onReply }) {
       key={comment.id}
       comment={comment}
       repliesByParent={repliesByParent}
+      user={user}
       onReply={onReply}
+      onDelete={onDelete}
     />
   ));
 }
 
-function CommentItem({ comment, repliesByParent, onReply }) {
+function CommentItem({ comment, repliesByParent, user, onReply, onDelete }) {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
   const replies = repliesByParent[String(comment.id)] || [];
+  const isOwner = String(comment.usuario_id ?? '') === String(user?.id ?? '');
 
   async function submitReply() {
     const created = await onReply(comment.id, text);
@@ -229,6 +269,11 @@ function CommentItem({ comment, repliesByParent, onReply }) {
       <div className={styles.commentActions}>
         <span>{new Date(comment.fecha_creacion).toLocaleDateString()}</span>
         <button onClick={() => setOpen(v => !v)}>Responder</button>
+        {isOwner && (
+          <button onClick={() => onDelete?.(comment.id)} className={styles.commentDeleteBtn}>
+            Borrar
+          </button>
+        )}
       </div>
       {open && (
         <div className={styles.replyForm}>
@@ -243,7 +288,9 @@ function CommentItem({ comment, repliesByParent, onReply }) {
               key={reply.id}
               comment={reply}
               repliesByParent={repliesByParent}
+              user={user}
               onReply={onReply}
+              onDelete={onDelete}
             />
           ))}
         </div>

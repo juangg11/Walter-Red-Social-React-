@@ -68,6 +68,21 @@ export const CommentModel = {
     );
   },
 
+  async countByPostId(publicacionId) {
+    const [[row]] = await pool.query(
+      'SELECT COUNT(*) AS total FROM comentarios WHERE publicacion_id = ?',
+      [publicacionId]
+    );
+    return row?.total || 0;
+  },
+
+  async setPostCommentCount(publicacionId, total) {
+    await pool.query(
+      'UPDATE publicaciones SET numero_comentarios = ? WHERE id = ?',
+      [total, publicacionId]
+    );
+  },
+
   async findAllWithUser() {
     const [rows] = await pool.query(
       `SELECT c.*, u.username, u.avatar_url

@@ -30,7 +30,7 @@ export const comentariosController = {
 
   async remove(req, res) {
     const { id } = idParamDto(req.params);
-    await comentariosService.remove(id, req.user.id);
-    res.json({ mensaje: 'Comentario eliminado' });
+    const data = await comentariosService.remove(id, req.user.id);
+    res.json({ mensaje: 'Comentario eliminado', ...data });
   },
 };

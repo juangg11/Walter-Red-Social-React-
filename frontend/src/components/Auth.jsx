@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import request from '../api/client';
 import { Mail, Lock, User, X, MessageSquare, HelpCircle, ArrowRight } from 'lucide-react';
@@ -68,6 +68,13 @@ export default function Auth({ onLogin }) {
   const [error, setError] = useState('');
 
   const [activeFooterTab, setActiveFooterTab] = useState(null);
+
+  useEffect(() => {
+    document.documentElement.classList.add('authPageActive');
+    return () => {
+      document.documentElement.classList.remove('authPageActive');
+    };
+  }, []);
 
   async function handleLogin(e) {
     e.preventDefault();

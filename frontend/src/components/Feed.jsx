@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ArrowBigUp, ArrowBigDown, MessageSquare, Plus, Repeat2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PostModal from './PostModal';
@@ -151,6 +152,11 @@ export default function Feed({ user, searchQuery, selectedCommunities, communiti
     setSelectedPost(prev => prev?.id === updatedPost.id ? updatedPost : prev);
   }
 
+  function handlePostDeleted(postId) {
+    setPosts(cur => cur.filter(p => String(p.id) !== String(postId)));
+    setSelectedPost(null);
+  }
+
   function handleCommentAdded(postId, count) {
     setPosts(cur => cur.map(p => p.id === postId ? { ...p, numero_comentarios: count } : p));
   }
@@ -219,6 +225,7 @@ export default function Feed({ user, searchQuery, selectedCommunities, communiti
           onClose={() => setSelectedPost(null)}
           onCommentAdded={count => handleCommentAdded(selectedPost.id, count)}
           onPostUpdated={syncPost}
+          onPostDeleted={handlePostDeleted}
           onAuthorClick={username => navigate(`/u/${username}`)}
           onShare={handleShare}
         />
@@ -232,13 +239,16 @@ export default function Feed({ user, searchQuery, selectedCommunities, communiti
         onPostCreated={fetchPosts}
       />
 
-      <button
-        onClick={() => setCreateOpen(true)}
-        title="Crear nuevo post"
-        className={styles.floatingCreateBtn}
-      >
-        <Plus size={28} />
-      </button>
+      {createPortal(
+        <button
+          onClick={() => setCreateOpen(true)}
+          title="Crear nuevo post"
+          className={styles.floatingCreateBtn}
+        >
+          <Plus size={28} />
+        </button>,
+        document.body
+      )}
     </>
   );
 }

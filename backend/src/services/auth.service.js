@@ -5,6 +5,18 @@ import { UserModel } from '../models/user.model.js';
 import { AppError } from '../utils/AppError.js';
 
 export const authService = {
+  toAuthUser(user) {
+    const authUser = {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+    };
+    if (user.avatar_url !== undefined) authUser.avatar_url = user.avatar_url;
+    if (user.bio !== undefined) authUser.bio = user.bio;
+    if (user.fecha_creacion !== undefined) authUser.fecha_creacion = user.fecha_creacion;
+    if (user.is_admin !== undefined) authUser.isAdmin = user.is_admin === 1 || user.is_admin === true;
+    return authUser;
+  },
 
   async register({ email, username, password }) {
     const existing = await UserModel.findByEmailOrUsername(email, username);
@@ -19,7 +31,7 @@ export const authService = {
 
     const token = jwt.sign({ id, email, username }, process.env.JWT_SECRET, { expiresIn: '7d' });
     const user = await UserModel.findById(id);
-    return { token, user: { id: user.id, email: user.email, username: user.username, avatar_url: user.avatar_url, bio: user.bio, fecha_creacion: user.fecha_creacion } };
+    return { token, user: this.toAuthUser(user) };
   },
 
   async login({ email, password }) {
@@ -35,7 +47,7 @@ export const authService = {
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
-    return { token, user: { id: user.id, email: user.email, username: user.username, avatar_url: user.avatar_url, bio: user.bio, fecha_creacion: user.fecha_creacion } };
+    return { token, user: this.toAuthUser(user) };
   },
 
   async checkUsername(username) {

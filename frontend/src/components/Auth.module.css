@@ -6,6 +6,7 @@
 
 .landingPage {
   min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -531,4 +532,10 @@
     flex-direction: row;
     gap: 2rem;
   }
+}
+
+:global(html.authPageActive) {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: auto;
 }

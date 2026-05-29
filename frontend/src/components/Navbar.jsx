@@ -1,5 +1,5 @@
 import { Search, Home, User, LogOut, Bell, Users, MessageCircle, Settings } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import request from '../api/client';
@@ -12,14 +12,26 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
   const [notifications, setNotifications] = useState([]);
   const [isAdmin, setIsAdmin] = useState(user?.isAdmin || false);
 
-  async function checkAdminStatus() {
-    try {
-      const data = await request('/usuarios/isAdmin');
-      setIsAdmin(data.isAdmin);
-    } catch (e) {
-      console.error('checkAdminStatus:', e);
-    }
-  }
+  useEffect(() => {
+    let ignore = false;
+    setIsAdmin(Boolean(user?.isAdmin));
+    if (!user?.id) return undefined;
+
+    request('/usuarios/isAdmin')
+      .then(data => {
+        if (!ignore) setIsAdmin(Boolean(data.isAdmin));
+      })
+      .catch(e => {
+        if (!ignore) {
+          setIsAdmin(false);
+          console.error('checkAdminStatus:', e);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [user?.id, user?.isAdmin]);
 
   async function handleNotificationsClick() {
     if (showNotifications) {
@@ -151,7 +163,7 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
 
           <div className={styles.navRight}>
             <div className={styles.profileMenu}>
-              {user?.isAdmin ? (
+              {isAdmin ? (
                 <button className={styles.profileLinkNav} onClick={() => navigate('/admin')}>
                   Panel de administración
                 </button>

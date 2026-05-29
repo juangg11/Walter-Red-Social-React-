@@ -41,7 +41,9 @@ export const comentariosService = {
     if (comment.usuario_id !== userId) throw new AppError(403, 'No autorizado');
 
     await CommentModel.delete(id);
-    await CommentModel.decrementPostCommentCount(comment.publicacion_id);
+    const total = await CommentModel.countByPostId(comment.publicacion_id);
+    await CommentModel.setPostCommentCount(comment.publicacion_id, total);
+    return { publicacion_id: comment.publicacion_id, numero_comentarios: total };
   },
 
   async getAll() {

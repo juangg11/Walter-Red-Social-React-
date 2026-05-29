@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ImagePlus, MessageCircle, Reply, Search, Send, Smile } from 'lucide-react';
 import request, { getChatSocketUrl } from '../api/client';
 import { uploadToCloudinary } from '../utils/cloudinary';
+import { addCacheBust } from '../utils/imageCacheBust';
 import styles from './ChatPage.module.css';
 
 const listVariants = {
@@ -32,6 +33,20 @@ const messageVariants = {
     transition: { type: "spring", stiffness: 450, damping: 28 } 
   }
 };
+
+function ChatAvatar({ src, username, className }) {
+  const initials = String(username || '?').slice(0, 2).toUpperCase();
+
+  if (src) {
+    return <img className={className} src={addCacheBust(src)} alt={username || 'Usuario'} />;
+  }
+
+  return (
+    <div className={className}>
+      <span>{initials}</span>
+    </div>
+  );
+}
 
 export default function ChatPage({ user }) {
   const [chats, setChats] = useState([]);
@@ -191,9 +206,7 @@ export default function ChatPage({ user }) {
           <motion.div variants={listVariants} initial="hidden" animate="visible" className={styles.userResults}>
             {users.map(found => (
               <motion.button key={found.id} variants={itemVariants} onClick={() => openChat(found.id)} whileTap={{ scale: 0.98 }}>
-                <div className={styles.avatarSmall}>
-                  <span>{found.username.slice(0, 2).toUpperCase()}</span>
-                </div>
+                <ChatAvatar className={styles.avatarSmall} src={found.avatar_url} username={found.username} />
                 <span>{found.username}</span>
               </motion.button>
             ))}
@@ -214,9 +227,7 @@ export default function ChatPage({ user }) {
                     onClick={() => setActiveChat(chat)}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <div className={styles.avatarSmall}>
-                      <span>{String(chat.other_username).slice(0, 2).toUpperCase()}</span>
-                    </div>
+                    <ChatAvatar className={styles.avatarSmall} src={chat.other_avatar_url} username={chat.other_username} />
                     <div>
                       <strong>{chat.other_username}</strong>
                       <span>{chat.ultimo_mensaje || (chat.ultima_imagen ? 'Imagen' : 'Sin mensajes aún')}</span>
@@ -241,9 +252,7 @@ export default function ChatPage({ user }) {
               className={styles.chatPanelContent}
             >
               <header className={styles.chatHeader}>
-                <div className={styles.chatHeaderAvatar}>
-                  <span>{String(activeChat.other_username).slice(0, 2).toUpperCase()}</span>
-                </div>
+                <ChatAvatar className={styles.chatHeaderAvatar} src={activeChat.other_avatar_url} username={activeChat.other_username} />
                 <div>
                   <h2>{activeChat.other_username}</h2>
                 </div>
@@ -260,6 +269,9 @@ export default function ChatPage({ user }) {
                       animate="animate"
                       className={`${styles.messageRow} ${mine ? styles.mine : ''}`}
                     >
+                      {!mine && (
+                        <ChatAvatar className={styles.messageAvatar} src={message.avatar_url} username={message.username} />
+                      )}
                       <div className={styles.messageBubble}>
                         {message.respuesta_a_id && (
                           <div className={styles.messageReply}>↳ {message.respuesta_username}: {message.respuesta_contenido || 'Imagen'}</div>
