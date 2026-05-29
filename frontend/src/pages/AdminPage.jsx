@@ -22,7 +22,7 @@ import {
   ChevronRight, 
   Lock, 
   Save, 
-  Sparkles, 
+  Plus, 
   Trash2, 
   Zap, 
   Download 
@@ -637,7 +637,7 @@ export default function AdminPage() {
                 <div className={styles.resourceToolbar}>
                   <SearchBar value={search} onChange={setSearch} placeholder="Buscar..." />
                   <button onClick={handleCreateNew} className={styles.saveBtn} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <Sparkles size={16} /> Nuevo
+                    <Plus size={16} /> Nuevo
                   </button>
                   <button onClick={exportCSV} className={styles.cancelBtn} style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <Download size={16} /> Exportar CSV
