@@ -22,7 +22,8 @@ import {
   ChevronRight, 
   Lock, 
   Save, 
-  Plus, 
+  Plus,
+  Lock, 
   Trash2, 
   Zap, 
   Download 
@@ -289,7 +290,7 @@ function DrawerForm({ open, selectedRow, headers, form, setForm, onSave, onClose
                     <><LoadingDots />Guardando…</>
                   ) : (
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-                      {selectedRow ? <><Save size={16} /> Guardar cambios</> : <><Sparkles size={16} /> Crear registro</>}
+                      {selectedRow ? <><Save size={16} /> Guardar cambios</> : <><Plus size={16} /> Crear registro</>}
                     </div>
                   )}
                 </motion.button>
