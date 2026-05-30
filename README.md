@@ -1,12 +1,41 @@
 # Walter Red Social
 
-Proyecto TFG de red social tipo comunidad-foro con tiempo real, autenticación JWT, publicación multimedia y panel de administración basado en OpenAPI.
+TFG de red social tipo comunidad-foro con tiempo real, autenticación JWT, publicación multimedia y panel de administración basado en OpenAPI.
 
 ## 1. Tecnologías (etiquetas)
 
-`#JavaScript` `#NodeJS` `#Express5` `#MySQL8` `#mysql2` `#JWT` `#bcrypt` `#WebSocket` `#ws`
-`#React19` `#Vite` `#ReactRouter7` `#FramerMotion` `#LucideReact` `#Cloudinary`
-`#Vitest` `#TestingLibrary` `#SonarCloud` `#Swagger` `#Docker` `#Vercel` `#Render` `#Aiven`
+### ⚙️ Backend & Base de Datos
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+[![NodeJS](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express5](https://img.shields.io/badge/Express_5-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![MySQL8](https://img.shields.io/badge/MySQL_8-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![mysql2](https://img.shields.io/badge/mysql2-4479A1?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/mysql2)
+
+### 🔒 Seguridad & Tiempo Real
+[![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON-web-tokens&logoColor=white)](https://jwt.io/)
+[![bcrypt](https://img.shields.io/badge/bcrypt-430098?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/bcrypt)
+[![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socketdotio&logoColor=white)](https://developer.mozilla.org/es/docs/Web/API/WebSockets_API)
+[![ws](https://img.shields.io/badge/ws-010101?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/ws)
+
+### 🎨 Frontend & UI
+[![React19](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![ReactRouter7](https://img.shields.io/badge/React_Router_7-CA4245?style=for-the-badge&logo=react-router&logoColor=white)](https://reactrouter.com/)
+[![FramerMotion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
+[![LucideReact](https://img.shields.io/badge/Lucide_React-F59E0B?style=for-the-badge&logo=lucide&logoColor=white)](https://lucide.dev/)
+[![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)](https://cloudinary.com/)
+
+### 🧪 Testing & Calidad de Código
+[![Vitest](https://img.shields.io/badge/Vitest-7B9B49?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
+[![TestingLibrary](https://img.shields.io/badge/Testing_Library-E33332?style=for-the-badge&logo=testing-library&logoColor=white)](https://testing-library.com/)
+[![SonarCloud](https://img.shields.io/badge/SonarCloud-F3702A?style=for-the-badge&logo=sonarcloud&logoColor=white)](https://sonarcloud.io/)
+[![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://swagger.io/)
+
+### 🚀 DevOps & Despliegue
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
+[![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://render.com/)
+[![Aiven](https://img.shields.io/badge/Aiven-FF4F00?style=for-the-badge&logo=aiven&logoColor=white)](https://aiven.io/)
 
 ## 2. Qué es el producto
 
@@ -504,17 +533,4 @@ Con esto, la animación está integrada sin romper accesibilidad, y el modo de r
 - SonarCloud integrado en CI.
 - Documentación OpenAPI disponible desde backend y consumida por frontend admin.
 - Preparado para despliegue desacoplado frontend/backend y base gestionada.
-
-## 16. Conclusión técnica (enfoque TFG)
-
-Walter implementa una arquitectura full-stack moderna y mantenible con:
-
-- separación por capas y validación sistemática,
-- autenticación segura y control de acceso,
-- mensajería en tiempo real,
-- gestión multimedia robusta,
-- observabilidad de calidad (tests + Sonar + Swagger),
-- despliegue cloud listo para producción académica/profesional.
-
-Este repositorio puede presentarse como base de TFG por nivel de alcance funcional, trazabilidad técnica y estructura de ingeniería.
 
