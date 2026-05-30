@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState, useCallback, useRef } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
+import PropTypes from "prop-types";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   User, 
@@ -32,7 +33,7 @@ import styles from "./AdminPage.module.css";
 
 function formatHeader(str) {
   if (!str) return "";
-  return str.replace(/([A-Z])/g, " $1").replace(/_/g, " ").trim()
+  return str.replaceAll(/([A-Z])/g, " $1").replaceAll("_", " ").trim()
     .replace(/^\w/, c => c.toUpperCase());
 }
 function normalizeResource(path) {
@@ -43,8 +44,35 @@ function formatValue(val) {
   if (typeof val === "boolean") return val ? "Sí" : "No";
   if (typeof val === "object") return JSON.stringify(val).slice(0, 60) + "…";
   const s = String(val);
-  if (s.match(/^\d{4}-\d{2}-\d{2}T/)) return new Date(s).toLocaleString("es-ES", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  if (/^\d{4}-\d{2}-\d{2}T/.exec(s)) return new Date(s).toLocaleString("es-ES", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
   return s.length > 80 ? s.slice(0, 80) + "…" : s;
+}
+
+function getToastVisuals(type) {
+  if (type === "success") {
+    return {
+      background: "var(--bg-tertiary)",
+      color: "var(--text-primary)",
+      border: "1px solid var(--primary)",
+      icon: <Check size={16} />,
+    };
+  }
+
+  if (type === "error") {
+    return {
+      background: "var(--danger)",
+      color: "#fca5a5",
+      border: "1px solid var(--secondary)",
+      icon: <X size={16} />,
+    };
+  }
+
+  return {
+    background: "var(--bg-secondary)",
+    color: "var(--text-primary)",
+    border: "1px solid var(--border-color)",
+    icon: <Info size={16} />,
+  };
 }
 
 const RESOURCE_ICONS = {
@@ -100,20 +128,19 @@ function Toast({ toasts }) {
   return (
     <div className={styles.toastContainer}>
       <AnimatePresence>
-        {toasts.map(t => (
+        {toasts.map(t => {
+          const visuals = getToastVisuals(t.type);
+          return (
           <motion.div key={t.id} variants={toastVariant} initial="initial" animate="animate" exit="exit"
             className={styles.toastItem}
-            style={{
-              background: t.type === "success" ? "var(--bg-tertiary)" : t.type === "error" ? "var(--danger)" : "var(--bg-secondary)",
-              color: t.type === "success" ? "var(--text-primary)" : t.type === "error" ? "#fca5a5" : "var(--text-primary)",
-              border: `1px solid ${t.type === "success" ? "var(--primary)" : t.type === "error" ? "var(--secondary)" : "var(--border-color)"}`
-            }}>
+            style={{ background: visuals.background, color: visuals.color, border: visuals.border }}>
             <span className={styles.toastIcon}>
-              {t.type === "success" ? <Check size={16} /> : t.type === "error" ? <X size={16} /> : <Info size={16} />}
+              {visuals.icon}
             </span>
             {t.message}
           </motion.div>
-        ))}
+          );
+        })}
       </AnimatePresence>
     </div>
   );
@@ -195,9 +222,9 @@ function Pagination({ page, total, perPage, onChange }) {
     <div className={styles.paginationContainer}>
       <button onClick={() => onChange(page - 1)} disabled={page === 1}
         className={styles.paginBtn} style={{ opacity: page === 1 ? 0.35 : 1 }}><ChevronLeft size={16} /></button>
-      {pages.map((p, i) => (
-        <button key={i} onClick={() => p !== "…" && onChange(p)}
-          className={`${styles.paginBtn} ${p === page ? styles.paginActive : ""}`} style={{ cursor: p === "…" ? "default" : "pointer" }}>
+      {pages.map((p) => (
+        <button key={`page-${p}`} onClick={() => onChange(p)}
+          className={`${styles.paginBtn} ${p === page ? styles.paginActive : ""}`}>
           {p}
         </button>
       ))}
@@ -360,8 +387,9 @@ export default function AdminPage() {
 
   const showToast = useCallback((message, type = "success") => {
     const id = Date.now();
+    const removeToast = () => setToasts(prev => prev.filter(toast => toast.id !== id));
     setToasts(p => [...p, { id, message, type }]);
-    setTimeout(() => setToasts(p => p.filter(t => t.id !== id)), 3500);
+    setTimeout(removeToast, 3500);
   }, []);
 
   useEffect(() => {
@@ -606,7 +634,7 @@ export default function AdminPage() {
         {/* Content area — fills remaining height, no outer scroll */}
         <div className={styles.contentWrapper}>
           <AnimatePresence mode="wait">
-            {!activeResource ? (
+            {activeResource == null ? (
               <motion.div key="welcome" variants={fadeSlideIn} initial="initial" animate="animate" exit="exit"
                 className={styles.welcomeScroll}>
                 <div className={styles.welcomeHeader}>
@@ -696,3 +724,61 @@ export default function AdminPage() {
     </div>
   );
 }
+
+const anyId = PropTypes.oneOfType([PropTypes.string, PropTypes.number]);
+
+Toast.propTypes = {
+  toasts: PropTypes.arrayOf(PropTypes.shape({
+    id: anyId.isRequired,
+    message: PropTypes.string.isRequired,
+    type: PropTypes.string,
+  })).isRequired,
+};
+
+ConfirmModal.propTypes = {
+  open: PropTypes.bool,
+  message: PropTypes.string,
+  onConfirm: PropTypes.func,
+  onCancel: PropTypes.func,
+};
+
+StatCard.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  icon: PropTypes.node,
+  color: PropTypes.string,
+  delay: PropTypes.number,
+};
+
+SearchBar.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  placeholder: PropTypes.string,
+};
+
+Pagination.propTypes = {
+  page: PropTypes.number,
+  total: PropTypes.number,
+  perPage: PropTypes.number,
+  onChange: PropTypes.func,
+};
+
+DrawerForm.propTypes = {
+  open: PropTypes.bool,
+  selectedRow: PropTypes.shape({
+    id: anyId,
+  }),
+  headers: PropTypes.arrayOf(PropTypes.string).isRequired,
+  form: PropTypes.object.isRequired,
+  setForm: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  resourceName: PropTypes.string,
+};
+
+BulkActionsBar.propTypes = {
+  selected: PropTypes.arrayOf(anyId).isRequired,
+  total: PropTypes.number,
+  onDeleteAll: PropTypes.func,
+  onClearSelection: PropTypes.func,
+};

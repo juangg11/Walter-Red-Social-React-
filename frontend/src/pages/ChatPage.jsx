@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import EmojiPicker from 'emoji-picker-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PropTypes from 'prop-types';
 import { ImagePlus, MessageCircle, Reply, Search, Send, Smile } from 'lucide-react';
 import request, { getChatSocketUrl } from '../api/client';
 import { uploadToCloudinary } from '../utils/cloudinary';
@@ -391,3 +392,15 @@ export default function ChatPage({ user }) {
     </main>
   );
 }
+
+ChatAvatar.propTypes = {
+  src: PropTypes.string,
+  username: PropTypes.string,
+  className: PropTypes.string,
+};
+
+ChatPage.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  }).isRequired,
+};

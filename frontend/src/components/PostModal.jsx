@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ArrowBigUp, ArrowBigDown, Repeat2, X, Trash2 } from 'lucide-react';
+import PropTypes from 'prop-types';
 import request from '../api/client';
 import { computeVote } from '../utils/computeVote';
 import styles from './PostModal.module.css';
@@ -298,4 +299,53 @@ function CommentItem({ comment, repliesByParent, user, onReply, onDelete }) {
     </div>
   );
 }
+
+const idType = PropTypes.oneOfType([PropTypes.number, PropTypes.string]);
+
+PostModal.propTypes = {
+  post: PropTypes.shape({
+    id: idType.isRequired,
+    usuario_id: idType,
+    username: PropTypes.string,
+    titulo: PropTypes.string,
+    contenido: PropTypes.string,
+    comunidad_nombre: PropTypes.string,
+    url_video: PropTypes.string,
+    url_imagen: PropTypes.string,
+    votos: PropTypes.number,
+    voto_usuario: PropTypes.string,
+    compartido_por_usuario: PropTypes.bool,
+    numero_comentarios: PropTypes.number,
+  }).isRequired,
+  user: PropTypes.shape({
+    id: idType,
+  }),
+  onClose: PropTypes.func,
+  onCommentAdded: PropTypes.func,
+  onPostUpdated: PropTypes.func,
+  onPostDeleted: PropTypes.func,
+  onAuthorClick: PropTypes.func,
+  onShare: PropTypes.func,
+};
+
+CommentTree.propTypes = {
+  comments: PropTypes.arrayOf(PropTypes.object).isRequired,
+  user: PropTypes.shape({ id: idType }),
+  onReply: PropTypes.func,
+  onDelete: PropTypes.func,
+};
+
+CommentItem.propTypes = {
+  comment: PropTypes.shape({
+    id: idType.isRequired,
+    usuario_id: idType,
+    username: PropTypes.string,
+    contenido: PropTypes.string,
+    fecha_creacion: PropTypes.string,
+  }).isRequired,
+  repliesByParent: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
+  user: PropTypes.shape({ id: idType }),
+  onReply: PropTypes.func,
+  onDelete: PropTypes.func,
+};
 

@@ -10,7 +10,7 @@ export const comentariosController = {
   },
 
   async getByPublicacion(req, res) {
-    if (!req.query || !req.query.publicacion_id) {
+    if (!req.query?.publicacion_id) {
       return comentariosController.getAll(req, res);
     }
 

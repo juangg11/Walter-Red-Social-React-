@@ -1,5 +1,6 @@
 import { Search, Home, User, LogOut, Bell, Users, MessageCircle, Settings } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import request from '../api/client';
@@ -232,3 +233,18 @@ export default function Navbar({ user, onSearchChange, notificationCount = 0, ac
     </>
   );
 }
+
+Navbar.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    username: PropTypes.string,
+    avatar_url: PropTypes.string,
+    isAdmin: PropTypes.bool,
+  }),
+  onSearchChange: PropTypes.func,
+  notificationCount: PropTypes.number,
+  activeTab: PropTypes.string,
+  onTabChange: PropTypes.func,
+  onLogout: PropTypes.func,
+  onNotificationsRead: PropTypes.func,
+};
