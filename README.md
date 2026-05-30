@@ -21,7 +21,6 @@ TFG de red social tipo comunidad-foro con tiempo real, autenticación JWT, publi
 [![ReactRouter7](https://img.shields.io/badge/React_Router_7-CA4245?style=for-the-badge&logo=react-router&logoColor=white)](https://reactrouter.com/)
 [![FramerMotion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 [![LucideReact](https://img.shields.io/badge/Lucide_React-F59E0B?style=for-the-badge&logo=lucide&logoColor=white)](https://lucide.dev/)
-[![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)](https://cloudinary.com/)
 
 ### 🧪 Testing & Calidad de Código
 [![Vitest](https://img.shields.io/badge/Vitest-7B9B49?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
@@ -34,6 +33,7 @@ TFG de red social tipo comunidad-foro con tiempo real, autenticación JWT, publi
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 [![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://render.com/)
 [![Aiven](https://img.shields.io/badge/Aiven-FF4F00?style=for-the-badge&logo=aiven&logoColor=white)](https://aiven.io/)
+[![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)](https://cloudinary.com/)
 
 ## 2. Qué es el producto
 
