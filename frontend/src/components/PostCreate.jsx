@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ImagePlus, X } from 'lucide-react';
 import PropTypes from 'prop-types';
 import request from '../api/client';
@@ -13,6 +13,16 @@ export default function PostCreate({ isOpen, onClose, communities = [], onPostCr
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const memberCommunities = communities.filter((c) => c.es_miembro);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
 
   function reset() {
     setTitulo('');
@@ -61,17 +71,13 @@ export default function PostCreate({ isOpen, onClose, communities = [], onPostCr
   }
 
   return (
-    <div
-      className={styles.modalOverlay}
-      role="button"
-      tabIndex={0}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) handleClose();
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') handleClose();
-      }}
-    >
+    <div className={styles.modalOverlay}>
+      <button
+        type="button"
+        aria-label="Cerrar modal"
+        onClick={handleClose}
+        className={styles.modalOverlayClose}
+      />
       <div className={styles.modalContent}>
         <button className={styles.modalClose} onClick={handleClose}><X size={24} /></button>
 
