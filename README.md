@@ -9,13 +9,11 @@ TFG de red social tipo comunidad-foro con tiempo real, autenticación JWT, publi
 [![NodeJS](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Express5](https://img.shields.io/badge/Express_5-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
 [![MySQL8](https://img.shields.io/badge/MySQL_8-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![mysql2](https://img.shields.io/badge/mysql2-4479A1?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/mysql2)
 
 ### 🔒 Seguridad & Tiempo Real
 [![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON-web-tokens&logoColor=white)](https://jwt.io/)
 [![bcrypt](https://img.shields.io/badge/bcrypt-430098?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/bcrypt)
 [![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socketdotio&logoColor=white)](https://developer.mozilla.org/es/docs/Web/API/WebSockets_API)
-[![ws](https://img.shields.io/badge/ws-010101?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/ws)
 
 ### 🎨 Frontend & UI
 [![React19](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
